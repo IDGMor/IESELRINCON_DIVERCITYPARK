@@ -1,0 +1,27 @@
+<ion-app [class.tabs-visible]="mostrarTabs">
+  <ion-router-outlet></ion-router-outlet>
+
+  <nav class="tab-bar" *ngIf="mostrarTabs">
+
+    <button class="tab-item" [class.active]="esRutaActiva('/home')" (click)="navegar('/home')">
+      <ion-icon [name]="esRutaActiva('/home') ? 'map' : 'map-outline'"></ion-icon>
+      <span>Mapa</span>
+    </button>
+
+    <button class="tab-item" [class.active]="esRutaActiva('/anadir-plaza')" (click)="navegar('/anadir-plaza')">
+      <ion-icon [name]="esRutaActiva('/anadir-plaza') ? 'add-circle' : 'add-circle-outline'"></ion-icon>
+      <span>Añadir</span>
+    </button>
+
+    <button class="tab-item" [class.active]="esRutaActiva('/perfil')" (click)="navegar('/perfil')">
+      <ion-icon [name]="esRutaActiva('/perfil') ? 'person-circle' : 'person-circle-outline'"></ion-icon>
+      <span>Perfil</span>
+    </button>
+
+    <button class="tab-item theme-toggle" (click)="themeService.alternar()">
+      <ion-icon [name]="themeService.esModoOscuro() ? 'sunny' : 'moon'"></ion-icon>
+      <span>{{ themeService.esModoOscuro() ? 'Claro' : 'Oscuro' }}</span>
+    </button>
+
+  </nav>
+</ion-app>

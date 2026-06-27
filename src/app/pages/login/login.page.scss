@@ -1,0 +1,254 @@
+.login-content {
+  --background: linear-gradient(135deg, #091426 0%, #1e293b 60%, #0d2040 100%);
+}
+
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 24px 20px;
+  position: relative;
+}
+
+// Botón aumentar letra
+.font-scale-btn-wrapper {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+}
+
+.font-scale-btn {
+  --color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+// Header con logo
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+  animation: fadeDown 0.5s ease;
+}
+
+.logo-circle {
+  width: 80px;
+  height: 80px;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  ion-icon {
+    font-size: 40px;
+    color: white;
+  }
+}
+
+.app-name {
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 6px;
+  letter-spacing: -0.5px;
+}
+
+.app-tagline {
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  margin: 0;
+}
+
+// Card
+.login-card {
+  background: white;
+  border-radius: 20px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: fadeUp 0.5s ease 0.1s both;
+}
+
+.form-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 24px;
+  text-align: center;
+}
+
+// Campos
+.campo {
+  margin-bottom: 12px;
+}
+
+.input-item {
+  --background: #f5f7fa;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --inner-padding-end: 8px;
+  border-radius: 12px;
+  margin-bottom: 4px;
+}
+
+.input-icon {
+  color: #091426;
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+.campo-error {
+  color: #d32f2f;
+  font-size: 12px;
+  margin: 2px 12px 0;
+}
+
+// Error banner
+.error-banner {
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  ion-icon { font-size: 18px; flex-shrink: 0; }
+}
+
+// Botones
+.btn-login {
+  --background: #091426;
+  --background-activated: #0d1f36;
+  --border-radius: 999px;
+  --box-shadow: 0 4px 15px rgba(9, 20, 38, 0.4);
+  height: 50px;
+  font-weight: 700;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.separador {
+  text-align: center;
+  margin: 20px 0 12px;
+  position: relative;
+  span {
+    background: white;
+    padding: 0 12px;
+    color: #888;
+    font-size: 13px;
+    position: relative;
+    z-index: 1;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e0e0e0;
+  }
+}
+
+.btn-registro {
+  --border-radius: 12px;
+  --color: #091426;
+  --border-color: #091426;
+  height: 50px;
+  font-weight: 600;
+}
+
+.skip-link {
+  text-align: center;
+  margin-top: 16px;
+}
+
+// Animaciones
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Dark mode ─────────────────────────────────────────────────
+@media (prefers-color-scheme: dark) {
+  .login-card {
+    background: #1e1e1e;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  .form-title {
+    color: #f3f4f6;
+  }
+
+  .input-item {
+    --background: #2a2a2a;
+    --color: #f3f4f6;
+    --border-radius: 12px;
+    border: 1px solid #444;
+  }
+
+  .input-icon {
+    color: #60a5fa;
+  }
+
+  .campo-error {
+    color: #f87171;
+  }
+
+  .error-banner {
+    background: #3b0f0f;
+    color: #f87171;
+    border: 1px solid #7f1d1d;
+  }
+
+  .separador {
+    span {
+      background: #1e1e1e;
+      color: #9ca3af;
+    }
+    &::before {
+      background: #444;
+    }
+  }
+
+  .btn-registro {
+    --color: #60a5fa;
+    --border-color: #60a5fa;
+  }
+
+  .skip-link ion-button {
+    --color: #9ca3af;
+  }
+}

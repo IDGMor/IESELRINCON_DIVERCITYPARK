@@ -1,0 +1,132 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mi Perfil</ion-title>
+    <ion-buttons slot="end">
+      <app-font-scale-button (scaleChange)="fontScale = $event"></app-font-scale-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="perfil-content" [style.--font-scale]="fontScale">
+
+  @if (loading) {
+    <div class="spinner-centro">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  }
+
+  @if (!loading && usuario) {
+
+    <!-- Cabecera con avatar y nombre -->
+    <div class="perfil-header">
+      <div class="avatar-grande">
+        {{ usuario.name | slice:0:1 | uppercase }}
+      </div>
+      <h1 class="usuario-nombre">{{ usuario.name }}</h1>
+
+      <!-- Puntuación con estrellas -->
+      <div class="puntuacion-container">
+        <div class="estrellas">
+          @for (i of estrellasArray; track i) {
+            <ion-icon
+              [name]="i < estrellas ? 'star' : 'star-outline'"
+              [class.estrella-llena]="i < estrellas"
+              [class.estrella-vacia]="i >= estrellas">
+            </ion-icon>
+          }
+        </div>
+        <p class="puntuacion-valor">{{ usuario.puntuacion }} / 5.00</p>
+        <p class="puntuacion-label">Valoración de la comunidad</p>
+      </div>
+    </div>
+
+    <!-- Datos de la cuenta -->
+    <ion-card class="info-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="person-circle-outline" color="primary"></ion-icon>
+          Datos de la cuenta
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <ion-item lines="full">
+          <ion-icon name="person-outline" slot="start" color="medium"></ion-icon>
+          <ion-label>
+            <p class="dato-label">Nombre</p>
+            <h3 class="dato-valor">{{ usuario.name }}</h3>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-icon name="shield-checkmark-outline" slot="start" color="medium"></ion-icon>
+          <ion-label>
+            <p class="dato-label">Estado de la cuenta</p>
+            <h3 class="dato-valor">
+              <ion-badge color="success">Activa</ion-badge>
+            </h3>
+          </ion-label>
+        </ion-item>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Info sobre la puntuación -->
+    <ion-card class="info-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="information-circle-outline" color="primary"></ion-icon>
+          ¿Cómo funciona la puntuación?
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="puntos-info">
+          <div class="punto-item">
+            <ion-icon name="add-circle" color="success"></ion-icon>
+            <span>Proponer una plaza</span>
+          </div>
+          <div class="punto-item">
+            <ion-icon name="warning" color="warning"></ion-icon>
+            <span>Reportar una incidencia</span>
+          </div>
+          <div class="punto-item">
+            <ion-icon name="star" color="tertiary"></ion-icon>
+            <span>La valoración refleja tu contribución a la comunidad</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+  }
+
+  @if (error) {
+    <ion-text color="danger">
+      <p class="error-mensaje">{{ error }}</p>
+    </ion-text>
+  }
+
+</ion-content>
+
+<ion-footer>
+  @if (!loading && usuario) {
+    <div class="botones-perfil">
+      <ion-button
+        expand="block"
+        color="danger"
+        fill="outline"
+        (click)="logout()"
+        [disabled]="cargandoLogout">
+        @if (cargandoLogout) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+        } @else {
+          <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        }
+        Cerrar sesión
+      </ion-button>
+    </div>
+  }
+  <div class="safe-area-bottom"></div>
+</ion-footer>

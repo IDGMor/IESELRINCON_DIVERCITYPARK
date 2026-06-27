@@ -1,0 +1,113 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="titulo-header">
+      <ion-icon name="trophy"></ion-icon>
+      Ranking
+    </ion-title>
+    <ion-buttons slot="end">
+      <app-font-scale-button></app-font-scale-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ranking-content" [style.--font-scale]="fontScale">
+
+  @if (loading) {
+    <ion-spinner name="crescent" class="spinner-centro"></ion-spinner>
+  }
+
+  @if (error) {
+    <ion-text color="danger">
+      <p class="error-mensaje">{{ error }}</p>
+    </ion-text>
+  }
+
+  @if (!loading && !error) {
+
+    <!-- PÓDIUM TOP 3 -->
+    @if (ranking.length >= 3) {
+      <div class="podium-seccion" role="region" aria-label="Podio de los 3 mejores colaboradores">
+        <h2 class="podium-titulo">🏆 Top Colaboradores</h2>
+        <div class="podium-container">
+
+          <!-- 2º puesto -->
+          <div class="podium-item puesto-2" role="group" aria-label="Segundo puesto">
+            <div class="avatar" aria-hidden="true">{{ ranking[1].name | slice:0:1 }}</div>
+            <p class="nombre">{{ ranking[1].name.split(' ')[0] }}</p>
+            <p class="puntos" aria-label="Puntuación: {{ ranking[1].puntuacion }} puntos">{{ ranking[1].puntuacion }} pts</p>
+            <div class="bloque bloque-2" aria-label="Segunda posición">2º</div>
+          </div>
+
+          <!-- 1º puesto -->
+          <div class="podium-item puesto-1" role="group" aria-label="Primer puesto, Ganador">
+            <ion-icon name="trophy" class="corona" aria-hidden="true"></ion-icon>
+            <div class="avatar avatar-grande" aria-hidden="true">{{ ranking[0].name | slice:0:1 }}</div>
+            <p class="nombre">{{ ranking[0].name.split(' ')[0] }}</p>
+            <p class="puntos">{{ ranking[0].puntuacion }} pts</p>
+            <div class="bloque bloque-1">1º</div>
+          </div>
+
+          <!-- 3º puesto -->
+          <div class="podium-item puesto-3">
+            <div class="avatar">{{ ranking[2].name | slice:0:1 }}</div>
+            <p class="nombre">{{ ranking[2].name.split(' ')[0] }}</p>
+            <p class="puntos">{{ ranking[2].puntuacion }} pts</p>
+            <div class="bloque bloque-3">3º</div>
+          </div>
+
+        </div>
+      </div>
+    }
+
+    <!-- CÓMO SE GANAN PUNTOS -->
+    <div class="info-puntos">
+      <p><ion-icon name="alert-circle"></ion-icon> Reportar incidencia: <strong>sube tu puntuación</strong></p>
+      <p><ion-icon name="checkmark-circle"></ion-icon> Incidencias resueltas mejoran tu valoración</p>
+    </div>
+
+    <!-- LISTA COMPLETA -->
+    <ion-list class="lista-ranking">
+      <ion-item-divider>
+        <ion-label>Clasificación completa ({{ total }} usuarios)</ion-label>
+      </ion-item-divider>
+
+      @for (usuario of ranking; track usuario.id; let i = $index) {
+        <ion-item>
+          <div class="posicion" slot="start"
+            [class.oro]="i === 0"
+            [class.plata]="i === 1"
+            [class.bronce]="i === 2">
+            {{ usuario.posicion }}
+          </div>
+          <ion-label>
+            <h2>{{ usuario.name }}</h2>
+            <p>
+              <!-- Estrellas desde el array booleano de la API -->
+              @for (estrella of usuario.estrellas; track $index) {
+                <ion-icon
+                  [name]="estrella ? 'star' : 'star-outline'"
+                  [style.color]="estrella ? '#FFD700' : '#ccc'"
+                  style="font-size:14px">
+                </ion-icon>
+              }
+            </p>
+            <p>
+              <ion-icon name="warning"></ion-icon> {{ usuario.incidencias_totales }} reportadas &nbsp;
+              <ion-icon name="checkmark-circle"></ion-icon> {{ usuario.incidencias_resueltas }} resueltas
+            </p>
+          </ion-label>
+          <ion-badge slot="end" class="badge-puntos">{{ usuario.puntuacion }} pts</ion-badge>
+        </ion-item>
+      }
+    </ion-list>
+
+  }
+
+</ion-content>
+
+<ion-footer>
+  <div class="safe-area-bottom"></div>
+</ion-footer>

@@ -1,0 +1,624 @@
+// ══════════════════════════════════════════════════════════════
+// IESELRINCON - INCIDENCIAS PAGE
+// Diseño accesible y amigable con contraste mejorado (WCAG AAA)
+// ══════════════════════════════════════════════════════════════
+
+// ═ VARIABLES MEJORADAS ═
+$color-primary: #0d5c2f;
+$color-success: #22c55e;
+$color-danger: #7c0f1f;
+$color-warning: #d97706;
+$color-info: #091426;
+$color-dark: #1f2937;
+$color-light: #f9fafb;
+$color-text: #1f2937;
+$color-text-secondary: #4b5563;
+$color-border: #e5e7eb;
+
+$font-base: 14px;
+$font-large: 16px;
+$font-small: 13px;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$font-weight-extra: 700;
+
+// ═ TOOLBAR ═
+ion-header {
+  --background: #091426 !important;
+}
+
+ion-toolbar,
+.toolbar-incidencia {
+  --background: linear-gradient(135deg, #091426 0%, #1e293b 100%) !important;
+  --color: white !important;
+  --border-color: transparent;
+  min-height: 64px;
+
+  ion-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-weight: $font-weight-bold;
+    font-size: $font-large;
+    letter-spacing: 0.02em;
+
+    ion-icon {
+      font-size: 22px;
+    }
+  }
+
+  ion-back-button {
+    --color: white;
+  }
+
+  ion-button {
+    --color: white;
+  }
+}
+
+// ═ CONTENIDO ═
+.incidencia-content {
+  --ion-padding: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  background: #f9fafb;
+}
+
+// ═ PANTALLA DE ÉXITO ═
+.exito-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 24px;
+  min-height: 70vh;
+  background: white;
+}
+
+.exito-icono-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+}
+
+.exito-icono {
+  font-size: 56px;
+  color: $color-success;
+}
+
+.exito-titulo {
+  font-size: 24px;
+  font-weight: 700;
+  color: $color-text;
+  margin: 0;
+  text-align: center;
+}
+
+.exito-texto {
+  font-size: $font-base;
+  color: $color-text-secondary;
+  text-align: center;
+  margin: 0;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.exito-botones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 300px;
+}
+
+// ═ FORMULARIO ═
+.formulario-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.seccion-formulario {
+  padding: 20px 20px;
+  background: white;
+  border-bottom: 8px solid #f9fafb;
+
+  &:first-of-type {
+    border-top: none;
+  }
+}
+
+.seccion-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: $font-large;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid $color-primary;
+  letter-spacing: 0.01em;
+
+  ion-icon {
+    font-size: 20px;
+    color: $color-primary;
+    flex-shrink: 0;
+  }
+}
+
+// ═ CAMPOS ═
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+
+  &.campo-error-activo {
+    .campo-input,
+    .campo-textarea,
+    .campo-select {
+      border-color: $color-danger !important;
+      background: rgba(124, 15, 31, 0.05) !important;
+    }
+  }
+}
+
+.campo-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label-texto {
+  font-size: $font-base;
+  font-weight: $font-weight-bold;
+  color: $color-text;
+  letter-spacing: 0.01em;
+}
+
+.label-ayuda {
+  font-size: $font-small;
+  color: $color-text-secondary;
+  font-weight: $font-weight-normal;
+}
+
+.campo-input,
+.campo-select,
+.campo-textarea {
+  font-size: $font-base !important;
+  font-weight: $font-weight-normal !important;
+  padding: 12px !important;
+  border: 1.5px solid $color-border !important;
+  border-radius: 8px !important;
+  background: white !important;
+  color: $color-text !important;
+  transition: all 0.2s ease;
+  min-height: 44px;
+
+  &:focus {
+    border-color: $color-primary !important;
+    box-shadow: 0 0 0 4px rgba(13, 92, 47, 0.12);
+    outline: none;
+  }
+}
+
+.campo-textarea {
+  min-height: 130px !important;
+  resize: vertical;
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
+}
+
+.campo-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fee2e2;
+  border-radius: 6px;
+  font-size: $font-small;
+  color: $color-danger;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+}
+
+// ═ SELECTOR DE TIPO ═
+.tipo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.tipo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 10px;
+  background: $color-light;
+  border: 1.5px solid $color-border;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 80px;
+  font-size: $font-small;
+  color: $color-text;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 24px;
+    color: $color-info;
+  }
+
+  span {
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.seleccionado {
+    background: linear-gradient(135deg, rgba(13, 92, 47, 0.12), rgba(13, 92, 47, 0.06));
+    border-color: $color-primary;
+    color: $color-primary;
+
+    ion-icon {
+      color: $color-primary;
+    }
+  }
+}
+
+.tipos-cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  color: $color-text-secondary;
+  font-size: $font-base;
+}
+
+.spinner-sm {
+  width: 24px;
+  height: 24px;
+  color: $color-primary;
+}
+
+// ═ FOTOS ═
+.foto-botones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.foto-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 12px;
+  border: 2px dashed $color-border;
+  border-radius: 10px;
+  background: $color-light;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  font-size: $font-small;
+  color: $color-text;
+  min-height: 80px;
+  font-family: inherit;
+
+  ion-icon {
+    font-size: 24px;
+    color: $color-info;
+  }
+
+  span {
+    text-align: center;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.foto-preview-container {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: $color-light;
+}
+
+.foto-preview {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.foto-eliminar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+
+  ion-icon {
+    font-size: 24px;
+    color: $color-danger;
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &:hover {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// ═ ACCIONES ═
+.acciones-container {
+  padding: 20px 16px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 2px solid $color-border;
+}
+
+.btn-enviar-incidencia {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  height: 52px;
+  font-size: $font-base;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+// ═ MENSAJES DE ERROR ═
+.error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  margin: 16px;
+  background: #fee2e2;
+  border-left: 4px solid $color-danger;
+  border-radius: 6px;
+
+  ion-icon {
+    font-size: 22px;
+    color: $color-danger;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+}
+
+.error-contenido {
+  flex: 1;
+
+  strong {
+    display: block;
+    font-size: $font-base;
+    color: $color-danger;
+    margin-bottom: 4px;
+  }
+
+  p {
+    margin: 0;
+    font-size: $font-small;
+    color: $color-danger;
+  }
+}
+
+// ═ RESPONSIVE ═
+@media (max-width: 600px) {
+  .seccion-formulario {
+    padding: 18px 14px;
+  }
+
+  .seccion-titulo {
+    font-size: 16px;
+
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+
+  .foto-botones {
+    grid-template-columns: 1fr;
+  }
+
+  .tipo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 400px) {
+  .campo-input,
+  .campo-select,
+  .campo-textarea {
+    font-size: 16px !important; // Previene zoom en iOS
+  }
+
+  .tipo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ═ DARK MODE ═
+@media (prefers-color-scheme: dark) {
+  // Fondo general
+  .incidencia-content {
+    background: #121212;
+    --background: #121212;
+  }
+
+  // Pantalla de éxito
+  .exito-container {
+    background: #1e1e1e;
+  }
+  .exito-titulo { color: #f3f4f6; }
+  .exito-texto  { color: #9ca3af; }
+
+  .seccion-formulario {
+    background: #1f2937;
+    border-bottom-color: #111827;
+  }
+
+  .seccion-titulo {
+    color: #f3f4f6;
+    border-bottom-color: $color-primary;
+  }
+
+  .label-texto {
+    color: #f3f4f6;
+  }
+
+  .label-ayuda {
+    color: #9ca3af;
+  }
+
+  .campo-input,
+  .campo-select,
+  .campo-textarea {
+    background: #374151 !important;
+    color: #f3f4f6 !important;
+    border-color: #4b5563 !important;
+  }
+
+  .campo-error-msg {
+    background: #3b0f0f;
+    color: #f87171;
+    border-color: #7f1d1d;
+  }
+
+  .tipo-card {
+    background: #374151;
+    color: #f3f4f6;
+    border-color: #4b5563;
+  }
+
+  .foto-btn {
+    background: #374151;
+    color: #f3f4f6;
+    border-color: #4b5563;
+  }
+
+  .foto-preview-container {
+    background: #2a2a2a;
+  }
+
+  .foto-eliminar {
+    background: rgba(30, 30, 30, 0.95);
+  }
+
+  .acciones-container {
+    background: #1f2937;
+    border-top-color: #4b5563;
+  }
+
+  // Banner de error
+  .error-banner {
+    background: #3b0f0f;
+    border-left-color: #f87171;
+  }
+  .error-contenido {
+    strong { color: #f87171; }
+    p      { color: #fca5a5; }
+  }
+}
+
+// ═ ACCESIBILIDAD ═
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .campo-input,
+  .campo-select,
+  .campo-textarea {
+    border-width: 3px !important;
+  }
+
+  .tipo-card {
+    border-width: 3px;
+  }
+}
+
+
+// ── FIX BOTONES TOOLBAR (override Ionic shadow DOM) ───────────
+ion-header ion-toolbar {
+  --background: linear-gradient(135deg, #091426 0%, #1e293b 100%) !important;
+  --color: #ffffff !important;
+}
+ion-header ion-toolbar ion-button,
+ion-header ion-toolbar ion-back-button {
+  --color: #ffffff !important;
+  color: #ffffff !important;
+}
+ion-header ion-toolbar ion-button ion-icon,
+ion-header ion-toolbar ion-back-button::part(native) {
+  color: #ffffff !important;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FIX DEFINITIVO: Botón "Aa" visible en toolbar (shadow DOM)
+// ══════════════════════════════════════════════════════════════
+
+ion-header ion-toolbar ion-button::part(native) {
+  color: #ffffff !important;
+  background: transparent !important;
+}
+
+ion-header ion-toolbar ion-button ion-icon {
+  color: #ffffff !important;
+  font-size: 22px !important;
+}
+
+// ── Escalado de fuente ────────────────────────────────────────
+.incidencia-content {
+  .label-texto { font-size: calc(var(--font-scale, 1) * 17px) !important; }
+  .label-ayuda { font-size: calc(var(--font-scale, 1) * 14px) !important; }
+  .campo-input, .campo-select, .campo-textarea {
+    font-size: calc(var(--font-scale, 1) * 16px) !important;
+  }
+  .seccion-titulo { font-size: calc(var(--font-scale, 1) * 18px) !important; }
+  .tipo-card span  { font-size: calc(var(--font-scale, 1) * 14px) !important; }
+  .exito-titulo    { font-size: calc(var(--font-scale, 1) * 22px) !important; }
+  .exito-texto     { font-size: calc(var(--font-scale, 1) * 16px) !important; }
+  .foto-btn span   { font-size: calc(var(--font-scale, 1) * 15px) !important; }
+}

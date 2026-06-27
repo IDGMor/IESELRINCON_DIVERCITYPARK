@@ -1,0 +1,39 @@
+/*
+ * El componente hereda los estilos globales .header-button y .header-icon
+ * definidos en home.page.scss (o en un archivo de estilos compartido).
+ *
+ * Si esos estilos globales no están disponibles en todas las páginas,
+ * descomenta el bloque siguiente para que el componente sea autosuficiente:
+ */
+
+// :host {
+//   display: contents; // ocupa el espacio mínimo dentro del ion-buttons
+// }
+//
+// .font-scale-btn {
+//   --color: var(--font-scale-btn-color, var(--ion-color-primary-contrast, #fff));
+//   --background: transparent !important;
+//   --padding-start: 0 !important;
+//   --padding-end:   0 !important;
+//   --padding-top:   0 !important;
+//   --padding-bottom:0 !important;
+//   min-width:  48px !important;
+//   min-height: 48px !important;
+//   margin: 0 4px !important;
+//
+//   ion-icon {
+//     font-size:  28px !important;
+//     width:      28px !important;
+//     height:     28px !important;
+//   }
+// }
+
+/*
+ * Personalización opcional: cambia el color del icono por página
+ * sobreescribiendo la custom property desde el host de cada página.
+ *
+ * Ejemplo en la toolbar de incidencias (toolbar-incidencia):
+ *   .toolbar-incidencia app-font-scale-button {
+ *     --font-scale-btn-color: #091426;
+ *   }
+ */

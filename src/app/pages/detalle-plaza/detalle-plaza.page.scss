@@ -1,0 +1,977 @@
+// ═══════════════════════════════════════════════════════════════
+//  VARIABLES DE DISEÑO PMR - ACCESIBILIDAD MEJORADA
+//  Paleta accesible: alto contraste WCAG AAA, tipografía clara
+//  Diseñado específicamente para PMR (Personas con Movilidad Reducida)
+// ═══════════════════════════════════════════════════════════════
+
+:root {
+  // Colores principales - WCAG AAA (contraste 7:1 mínimo)
+  --pmr-azul:       #091426;   // Azul oscuro: buena legibilidad
+  --pmr-azul-claro: #e8f1ff;   // Azul claro para fondos
+  --pmr-verde:      #0d5c2f;   // Verde oscuro: alto contraste
+  --pmr-verde-claro:#dcfce7;   // Verde muy claro
+  --pmr-rojo:       #7c0f1f;   // Rojo oscuro: visible y contrastado
+  --pmr-rojo-claro: #fee2e2;   // Rojo muy claro
+  --pmr-naranja:    #7a3a00;   // Naranja oscuro
+  --pmr-naranja-claro: #fef3c7; // Naranja muy claro
+  --pmr-gris:       #191c1e;   // Gris oscuro para texto
+  --pmr-gris-claro: #f7f9fb;   // Gris muy claro para fondos
+  --pmr-borde:      #e0e3e5;   // Borde visible
+  --pmr-texto:      #191c1e;   // Texto principal: máximo contraste
+  --pmr-texto-sec:  #45474c;   // Texto secundario: contraste suficiente
+
+  // Tipografía PMR - Optimizada para legibilidad
+  --pmr-font:       'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
+  --pmr-size-base:  18px;      // Base aumentada
+  --pmr-size-sm:    16px;      // Pequeño todavía legible
+  --pmr-size-label: 16px;      // Etiquetas bien visibles
+  --pmr-size-h1:    24px;      // Títulos grandes y claros
+  --pmr-weight-normal: 400;
+  --pmr-weight-bold: 600;      // Más sutil que 700
+  --pmr-weight-extra: 800;     // Para énfasis
+
+  // Espaciado - Cómodo para usuarios con limitaciones motrices
+  --pmr-radio:      12px;      // Bordes redondeados
+  --pmr-radio-btn:  10px;      // Botones redondeados
+  --pmr-gap:        16px;      // Espaciado generoso entre elementos
+
+  // Altura mínima táctil (WCAG 2.5.5: mínimo 44x44, recomendado 54x54)
+  --pmr-touch:      56px;      // 56px mínimo para PMR
+}
+
+// ── TIPOGRAFÍA GLOBAL ─────────────────────────────────────────
+ion-content, ion-card, ion-card-content, ion-note, ion-badge,
+ion-button, ion-searchbar, ion-toolbar, p, span, h1, h2, h3 {
+  font-family: var(--pmr-font) !important;
+  letter-spacing: 0.02em;      // Mejor separación de letras
+  line-height: 1.6;            // Mayor espaciado de líneas
+  font-weight: var(--pmr-weight-normal);
+}
+
+button {
+  font-family: var(--pmr-font) !important;
+  font-size: var(--pmr-size-base) !important;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+// Mejorar foco para navegación por teclado
+*:focus-visible {
+  outline: 3px solid var(--pmr-azul) !important;
+  outline-offset: 2px;
+}
+
+// ── TOOLBAR ───────────────────────────────────────────────────
+.toolbar-pmr {
+  --background: linear-gradient(135deg, #091426 0%, #1e293b 100%);
+  --color: #ffffff;
+
+  ion-title.toolbar-titulo {
+    font-size: var(--pmr-size-h1);
+    font-weight: var(--pmr-weight-extra);
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  ion-back-button {
+    --color: #fff;
+    font-size: var(--pmr-size-sm);
+  }
+
+  .btn-incidencia-toolbar {
+    --color: #fff;
+    font-size: 24px;
+  }
+}
+
+.toolbar-buscador {
+  --background: #f8fafc;
+  border-bottom: 1px solid var(--pmr-borde);
+  padding-bottom: 6px;
+}
+
+// ── BUSCADOR ──────────────────────────────────────────────────
+.buscador-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 8px;
+}
+
+.searchbar-pmr {
+  --border-radius: var(--pmr-radio);
+  --background: #fff;
+  --border-color: var(--pmr-borde);
+  --box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  --placeholder-color: #9ca3af;
+  --color: var(--pmr-gris);
+  font-size: var(--pmr-size-base) !important;
+  height: 48px;
+}
+
+// ── SELECTOR DE RANGO ─────────────────────────────────────────
+.rango-selector {
+  display: flex;
+  gap: 8px;
+  padding: 0 4px 4px;
+
+  .btn-rango {
+    flex: 1;
+    height: 38px;
+    border: 2px solid var(--pmr-borde);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--pmr-gris);
+    font-size: var(--pmr-size-sm);
+    font-weight: 600;
+    font-family: var(--pmr-font);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+
+    &.activo {
+      background: var(--pmr-azul);
+      border-color: var(--pmr-azul);
+      color: #fff;
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--pmr-azul);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// ── SPINNER ───────────────────────────────────────────────────
+.spinner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  gap: 12px;
+}
+.spinner-centro { --color: var(--pmr-azul); width: 40px; height: 40px; }
+.spinner-texto  { font-size: var(--pmr-size-sm); color: #6b7280; }
+
+// ── MENSAJE DE ALERTA ─────────────────────────────────────────
+.mensaje-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 16px 0;
+  padding: 14px 16px;
+  border-radius: var(--pmr-radio);
+  font-size: var(--pmr-size-sm);
+  font-weight: 600;
+  line-height: 1.4;
+
+  &.mensaje-success {
+    background: var(--pmr-verde-claro);
+    color: var(--pmr-verde);
+    border: 1.5px solid #86efac;
+  }
+  &.mensaje-error {
+    background: var(--pmr-rojo-claro);
+    color: var(--pmr-rojo);
+    border: 1.5px solid #fca5a5;
+  }
+  &.mensaje-info {
+    background: var(--pmr-azul-claro);
+    color: var(--pmr-azul);
+    border: 1.5px solid #93c5fd;
+  }
+
+  .mensaje-icon { font-size: 22px; flex-shrink: 0; }
+  .mensaje-texto { flex: 1; }
+}
+
+// ── MAPA PRINCIPAL ────────────────────────────────────────────
+.mapa-principal-wrapper {
+  position: relative;
+  margin: 12px 16px 0;
+  border-radius: var(--pmr-radio);
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  border: 1.5px solid var(--pmr-borde);
+}
+
+.mapa-principal {
+  width: 100%;
+  height: 220px;
+  background: #e5e7eb;
+}
+
+// Badge estado sobre el mapa
+.mapa-estado-badge {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  z-index: 900;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+
+  &.badge-libre {
+    background: var(--pmr-verde);
+    color: #fff;
+  }
+  &.badge-ocupada {
+    background: var(--pmr-rojo);
+    color: #fff;
+  }
+
+  ion-icon { font-size: 16px; }
+}
+
+// Botón localizar usuario
+.btn-localizar-mapa {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid var(--pmr-borde);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--pmr-azul);
+  z-index: 900;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+
+  &:active { background: var(--pmr-azul-claro); }
+  &:focus-visible { outline: 3px solid var(--pmr-azul); outline-offset: 2px; }
+}
+
+// ── CABECERA INFO ─────────────────────────────────────────────
+.cabecera-pmr {
+  padding: 14px 16px 4px;
+}
+
+.direccion-titulo {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: var(--pmr-size-h1);
+  font-weight: 700;
+  color: var(--pmr-gris);
+  margin: 0 0 10px;
+  line-height: 1.35;
+
+  ion-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+}
+
+.tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tag-zona,
+.tag-distancia {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: var(--pmr-size-label);
+  font-weight: 600;
+
+  ion-icon { font-size: 14px; }
+}
+
+.tag-zona {
+  background: var(--pmr-azul-claro);
+  color: var(--pmr-azul);
+}
+
+.tag-distancia {
+  &.distancia-ok  { background: var(--pmr-verde-claro); color: var(--pmr-verde); }
+  &.distancia-lejos { background: var(--pmr-rojo-claro); color: var(--pmr-rojo); }
+}
+
+// Nota de acceso / info / warning / error
+.nota-acceso {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--pmr-radio);
+  font-size: var(--pmr-size-sm);
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 10px;
+
+  // Default: warning
+  background: var(--pmr-naranja-claro);
+  color: var(--pmr-naranja);
+  border: 1.5px solid #fcd34d;
+
+  &.nota-info {
+    background: var(--pmr-azul-claro);
+    color: var(--pmr-azul);
+    border-color: #93c5fd;
+  }
+  &.nota-error {
+    background: var(--pmr-rojo-claro);
+    color: var(--pmr-rojo);
+    border-color: #fca5a5;
+  }
+  &.nota-warning {
+    background: var(--pmr-naranja-claro);
+    color: var(--pmr-naranja);
+    border-color: #fcd34d;
+  }
+
+  ion-icon { font-size: 20px; flex-shrink: 0; }
+}
+
+// ── SELECTOR DE DURACIÓN ──────────────────────────────────────
+.selector-duracion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0;
+  border: 2px solid var(--pmr-borde);
+  border-radius: var(--pmr-radio);
+  background: var(--pmr-azul-claro);
+  padding: 14px 16px;
+}
+
+.duracion-label {
+  font-size: var(--pmr-size-base);
+  font-weight: 700;
+  color: var(--pmr-gris);
+  margin: 0 0 8px 0;
+  display: block;
+}
+
+.duracion-botones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-duracion {
+  padding: 12px 16px;
+  background: #fff;
+  color: var(--pmr-gris);
+  border: 2px solid var(--pmr-borde);
+  border-radius: 8px;
+  font-family: var(--pmr-font);
+  font-size: var(--pmr-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 48px;
+  transition: all 0.15s ease;
+  text-align: center;
+
+  &:hover:not(.activo) {
+    background: var(--pmr-gris-claro);
+    border-color: var(--pmr-azul);
+  }
+
+  &.activo {
+    background: linear-gradient(135deg, #091426 0%, #1e293b 100%);
+    color: #fff;
+    border-color: #091426;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(9,20,38,0.28);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--pmr-azul);
+    outline-offset: 2px;
+  }
+}
+
+// ── BOTONES PRINCIPALES DE ACCIÓN ─────────────────────────────
+.acciones-pmr {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;                         // Mayor espaciado entre botones
+  padding-top: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: calc(20px + var(--ion-safe-area-bottom, env(safe-area-inset-bottom, 0px)));
+  margin-top: 12px;
+}
+
+.btn-accion {
+  // Tamaño uniforme para TODOS los botones - OPTIMIZADO PMR
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;                         // Mayor espaciado icon-text
+  width: 100%;
+  min-height: 56px;                  // 56px mínimo táctil (WCAG 2.5.5)
+  height: auto;
+  padding: 16px 24px;                // Padding más generoso
+  border: none;
+  border-radius: var(--pmr-radio-btn);
+  font-family: var(--pmr-font);
+  font-size: 18px;                   // Texto más legible
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: normal;               // evitar solapamiento de texto
+  word-break: break-word;
+  line-height: 1.4;
+  line-height: 1.3;
+
+  ion-icon { font-size: 24px; flex-shrink: 0; }
+
+  &:active:not([disabled]) { opacity: 0.82; transform: scale(0.98); }
+  &:focus-visible { outline: 3px solid var(--pmr-azul); outline-offset: 3px; }
+
+  &[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  // OCUPAR – rojo
+  &.btn-ocupar {
+    background: #7c0f1f !important;
+    color: #fff !important;
+    box-shadow: 0 3px 10px rgba(124,15,31,0.35);
+  }
+
+  // LIBERAR – verde
+  &.btn-liberar {
+    background: #0d5c2f !important;
+    color: #fff !important;
+    box-shadow: 0 3px 10px rgba(13,92,47,0.35);
+  }
+
+  // OTRO VEHÍCULO – naranja sólido
+  &.btn-otro-vehiculo {
+    background: #7a3a00 !important;
+    color: #fff !important;
+    box-shadow: 0 3px 10px rgba(122,58,0,0.35);
+  }
+
+  // REPORTAR – borde naranja
+  &.btn-incidencia {
+    background: #ffffff !important;
+    color: #7a3a00 !important;
+    border: 2px solid #7a3a00 !important;
+    box-shadow: none;
+  }
+}
+
+// ── TARJETAS DE SECCIÓN ───────────────────────────────────────
+.seccion-card {
+  margin: 12px 16px;
+  border-radius: var(--pmr-radio) !important;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07) !important;
+  border: 1px solid var(--pmr-borde) !important;
+
+  ion-card-header {
+    padding-bottom: 6px;
+  }
+}
+
+.card-title-pmr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: var(--pmr-gris) !important;
+
+  ion-icon { font-size: 20px; }
+}
+
+// ── UBICACIÓN ─────────────────────────────────────────────────
+.card-ubicacion .ubicacion-dir {
+  font-size: var(--pmr-size-sm);
+  color: var(--pmr-gris);
+  margin: 0 0 12px;
+  line-height: 1.4;
+}
+
+.btn-gps {
+  --border-radius: var(--pmr-radio-btn);
+  height: var(--pmr-touch);
+  font-size: var(--pmr-size-base) !important;
+  font-weight: 700 !important;
+}
+
+// ── SPECS GRID (señalización / estado) ────────────────────────
+.specs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--pmr-gap);
+  margin-bottom: 10px;
+}
+
+.spec-item {
+  background: var(--pmr-gris-claro);
+  border: 1px solid var(--pmr-borde);
+  border-radius: var(--pmr-radio);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.spec-label {
+  font-size: var(--pmr-size-label);
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+.spec-valor,
+.acc-valor {
+  font-size: var(--pmr-size-sm);
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1.5px solid transparent;
+  text-align: center;
+  white-space: nowrap;
+}
+
+// Observaciones
+.observaciones-box {
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--pmr-gris-claro);
+  border-radius: var(--pmr-radio);
+  border: 1px solid var(--pmr-borde);
+}
+.incidencia-box {
+  background: var(--pmr-rojo-claro);
+  border-color: #fca5a5;
+
+  .spec-label { color: var(--pmr-rojo); }
+}
+.observaciones-texto {
+  margin: 6px 0 0;
+  font-size: var(--pmr-size-sm);
+  color: var(--pmr-gris);
+  line-height: 1.5;
+}
+
+// ── ACCESIBILIDAD GRID (2 en 2) ───────────────────────────────
+.accesibilidad-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pmr-gap);
+}
+
+.acc-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--pmr-gap);
+}
+
+.acc-item {
+  background: var(--pmr-gris-claro);
+  border: 1px solid var(--pmr-borde);
+  border-radius: var(--pmr-radio);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+
+  &.acc-item-vacio {
+    background: transparent;
+    border-color: transparent;
+    pointer-events: none;
+  }
+}
+
+// ── NUEVA GRID ACCESIBILIDAD (2 en 2) ─────────────────────────
+.accesibilidad-grid-dos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.acc-row-dos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.acc-item-dos {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border: 2px solid var(--pmr-borde);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+  transition: all 0.2s ease;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:hover {
+    border-color: var(--pmr-azul);
+    box-shadow: 0 2px 8px rgba(26, 86, 219, 0.1);
+  }
+}
+
+.acc-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.acc-icon {
+  font-size: 26px;
+  color: var(--pmr-azul);
+  flex-shrink: 0;
+}
+
+.acc-label {
+  font-size: var(--pmr-size-label);
+  color: #6b7280;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.acc-valor {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+
+  &.valor-si {
+    background: var(--pmr-verde-claro);
+    color: var(--pmr-verde);
+  }
+
+  &.valor-no {
+    background: var(--pmr-rojo-claro);
+    color: var(--pmr-rojo);
+  }
+
+  &.valor-neutro {
+    background: #f0f9ff;
+    color: var(--pmr-azul);
+    font-size: 15px;
+    white-space: normal;
+  }
+}
+
+// ── CARD ACCESIBILIDAD Y ENTORNO ──────────────────────────────
+.card-accesibilidad,
+.card-entorno {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.detalles-extras {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.detalle-box {
+  padding: 14px;
+  background: #f0f9ff;
+  border-left: 4px solid var(--pmr-azul);
+  border-radius: 8px;
+
+  &.incidencia-box {
+    background: var(--pmr-naranja-claro);
+    border-left-color: var(--pmr-naranja);
+  }
+}
+
+.detalle-label {
+  display: block;
+  font-size: var(--pmr-size-label);
+  color: var(--pmr-gris);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.detalle-texto {
+  margin: 0;
+  font-size: var(--pmr-size-sm);
+  color: var(--pmr-gris);
+  line-height: 1.5;
+}
+
+// ── VALORES Sí/No/Bueno/Malo ──────────────────────────────────
+.valor-si,
+.valor-bueno   {
+  background: var(--pmr-verde-claro);
+  color: var(--pmr-verde);
+  border-color: #86efac;
+}
+.valor-no,
+.valor-malo    {
+  background: var(--pmr-rojo-claro);
+  color: var(--pmr-rojo);
+  border-color: #fca5a5;
+}
+.valor-neutro  {
+  background: var(--pmr-gris-claro);
+  color: var(--pmr-gris);
+  border-color: var(--pmr-borde);
+  white-space: normal;
+  font-size: 13px;
+}
+
+// ── OCUPACIÓN ─────────────────────────────────────────────────
+.ocupacion-libre   { color: var(--pmr-verde);  font-weight: 700; }
+.ocupacion-ocupada { color: var(--pmr-rojo);   font-weight: 700; }
+
+// ═══════════════════════════════════════════════════════════════
+//  MODO OSCURO
+// ═══════════════════════════════════════════════════════════════
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pmr-gris-claro: #1f2937;
+    --pmr-borde:      #374151;
+    --pmr-gris:       #f3f4f6;
+  }
+
+  .toolbar-buscador { --background: #111827; border-color: #374151; }
+  .searchbar-pmr    { --background: #1f2937; --color: #f3f4f6; --border-color: #374151; }
+  .btn-rango {
+    background: #1f2937 !important;
+    color: #d1d5db !important;
+    border-color: #374151 !important;
+    &.activo { background: var(--pmr-azul) !important; color: #fff !important; }
+  }
+
+  .mapa-principal-wrapper { border-color: #374151; }
+  .btn-localizar-mapa {
+    background: #1f2937;
+    border-color: #374151;
+    color: #93c5fd;
+    &:active { background: #2563eb22; }
+  }
+
+  .seccion-card {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+  .card-title-pmr { color: #f3f4f6 !important; }
+  .spec-label, .acc-label { color: #9ca3af !important; }
+  .spec-item, .acc-item  {
+    background: #111827 !important;
+    border-color: #374151 !important;
+  }
+  .observaciones-box {
+    background: #111827 !important;
+    border-color: #374151 !important;
+  }
+  .observaciones-texto, .ubicacion-dir, .direccion-titulo { color: #f3f4f6 !important; }
+
+  .valor-si, .valor-bueno {
+    background: #14532d !important; color: #86efac !important; border-color: #166534 !important;
+  }
+  .valor-no, .valor-malo {
+    background: #450a0a !important; color: #fca5a5 !important; border-color: #7f1d1d !important;
+  }
+  .valor-neutro {
+    background: #1f2937 !important; color: #d1d5db !important; border-color: #374151 !important;
+  }
+
+  .mensaje-success { background: #14532d !important; color: #86efac !important; border-color: #166534 !important; }
+  .mensaje-error   { background: #450a0a !important; color: #fca5a5 !important; border-color: #7f1d1d !important; }
+  .mensaje-info    { background: #1e3a5f !important; color: #93c5fd !important; border-color: #091426 !important; }
+
+  .nota-acceso {
+    background: #422006 !important;
+    color: #fcd34d !important;
+    border-color: #92400e !important;
+    &.nota-info  { background: #1e3a5f !important; color: #93c5fd !important; border-color: #091426 !important; }
+    &.nota-error { background: #450a0a !important; color: #fca5a5 !important; border-color: #7f1d1d !important; }
+  }
+
+  .tag-zona       { background: #1e3a5f !important; color: #93c5fd !important; }
+  .distancia-ok   { background: #14532d !important; color: #86efac !important; }
+  .distancia-lejos{ background: #450a0a !important; color: #fca5a5 !important; }
+
+  .btn-incidencia {
+    background: #1f2937 !important;
+    border-color: #d97706 !important;
+    color: #fcd34d !important;
+  }
+
+  .rango-selector .btn-rango {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #d1d5db !important;
+    &.activo { background: var(--pmr-azul) !important; color: #fff !important; border-color: var(--pmr-azul) !important; }
+  }
+
+  // Tarjetas de accesibilidad con gradiente claro
+  .acc-item-dos {
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+
+  // Cajas de detalle con fondo celeste claro
+  .detalle-box {
+    background: #1e3a5f !important;
+    border-left-color: #60a5fa !important;
+    &.incidencia-box {
+      background: #422006 !important;
+      border-left-color: #fbbf24 !important;
+    }
+  }
+  .detalle-label { color: #9ca3af !important; }
+  .detalle-texto  { color: #e0e0e0 !important; }
+
+  // Selector de duración (fondo azul claro)
+  .selector-duracion {
+    background: #1e3a5f !important;
+    border-color: #374151 !important;
+  }
+  .duracion-label { color: #f3f4f6 !important; }
+  .btn-duracion {
+    background: #1f2937 !important;
+    color: #d1d5db !important;
+    border-color: #374151 !important;
+    &.activo { background: var(--pmr-azul) !important; color: #fff !important; }
+  }
+
+  // Spinner texto
+  .spinner-texto { color: #9ca3af !important; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RESPONSIVE: tablets / pantallas grandes
+// ═══════════════════════════════════════════════════════════════
+@media (min-width: 480px) {
+  .acciones-pmr {
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .btn-ocupar,
+    .btn-liberar {
+      flex: 1 1 45%;
+    }
+    .btn-incidencia {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .mapa-principal { height: 300px; }
+  :root { --pmr-size-base: 18px; --pmr-size-h1: 22px; }
+
+  .acciones-pmr {
+    .btn-ocupar,
+    .btn-liberar {
+      flex: 1;
+    }
+    .btn-incidencia {
+      flex: 1 1 auto;
+    }
+  }
+}
+
+
+// ── FIX BOTONES TOOLBAR (override Ionic shadow DOM) ───────────
+ion-header ion-toolbar {
+  --background: linear-gradient(135deg, #091426 0%, #1e293b 100%) !important;
+  --color: #ffffff !important;
+}
+ion-header ion-toolbar ion-button,
+ion-header ion-toolbar ion-back-button {
+  --color: #ffffff !important;
+  color: #ffffff !important;
+}
+ion-header ion-toolbar ion-button ion-icon,
+ion-header ion-toolbar ion-back-button::part(native) {
+  color: #ffffff !important;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FIX DEFINITIVO: Botón "Aa" visible en toolbar (shadow DOM)
+// ══════════════════════════════════════════════════════════════
+
+// Forzar color blanco penetrando el shadow DOM de ion-button
+ion-header ion-toolbar ion-button::part(native) {
+  color: #ffffff !important;
+  background: transparent !important;
+}
+
+ion-header ion-toolbar .btn-incidencia-toolbar::part(native) {
+  color: #ffffff !important;
+  background: transparent !important;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+// El ion-icon dentro del botón (no está en shadow DOM del botón)
+ion-header ion-toolbar ion-button ion-icon {
+  color: #ffffff !important;
+  font-size: 22px !important;
+}
+
+// ── Escalado de fuente ────────────────────────────────────────
+.detalle-content {
+  --padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  .direccion-titulo  { font-size: calc(var(--font-scale, 1) * 22px) !important; }
+  .tag-zona,
+  .tag-distancia     { font-size: calc(var(--font-scale, 1) * 14px) !important; }
+  .nota-acceso       { font-size: calc(var(--font-scale, 1) * 15px) !important; }
+  .btn-accion        { font-size: calc(var(--font-scale, 1) * 17px) !important; }
+  .btn-duracion      { font-size: calc(var(--font-scale, 1) * 16px) !important; }
+  .duracion-label    { font-size: calc(var(--font-scale, 1) * 16px) !important; }
+  .card-title-pmr    { font-size: calc(var(--font-scale, 1) * 15px) !important; }
+  .spec-label,
+  .acc-label         { font-size: calc(var(--font-scale, 1) * 13px) !important; }
+  .spec-valor,
+  .acc-valor         { font-size: calc(var(--font-scale, 1) * 14px) !important; }
+  .observaciones-texto,
+  .detalle-texto     { font-size: calc(var(--font-scale, 1) * 15px) !important; }
+  .ubicacion-dir     { font-size: calc(var(--font-scale, 1) * 15px) !important; }
+}
+
+// ── Sección acciones: sin espacio vacío superior extra ────────
+.acciones-pmr {
+  padding-top: 8px !important;
+}

@@ -1,0 +1,207 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Proponer plaza PMR</ion-title>
+    <ion-buttons slot="end">
+      <app-font-scale-button></app-font-scale-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [style.--font-scale]="fontScale">
+
+  <!-- AVISO -->
+  <div class="aviso-banner">
+    <ion-icon name="information-circle" aria-hidden="true"></ion-icon>
+    <span>La plaza quedará pendiente de verificación por el administrador antes de aparecer en el mapa.</span>
+  </div>
+
+  <!-- MAPA -->
+  <div class="seccion-form">
+    <h3 class="seccion-titulo">
+      <ion-icon name="location" aria-hidden="true"></ion-icon>
+      Ubicación en el mapa
+    </h3>
+    <div #mapContainer id="map" class="mapa-container"></div>
+    <p class="mapa-hint">
+      <ion-icon name="finger-print" aria-hidden="true"></ion-icon>
+      Toca el mapa para marcar la ubicación exacta
+    </p>
+  </div>
+
+  <form [formGroup]="formulario">
+
+    <!-- DATOS BÁSICOS -->
+    <div class="seccion-form">
+      <h3 class="seccion-titulo">
+        <ion-icon name="document-text" aria-hidden="true"></ion-icon>
+        Datos básicos
+      </h3>
+
+      <div class="campo-grupo">
+        <label class="campo-label">Dirección <span class="campo-req">*</span></label>
+        <ion-input formControlName="direccion" placeholder="Ej: C. Secretario Padilla, 77" type="text" class="campo-input"></ion-input>
+        @if (direccion?.touched && direccion?.hasError('required')) {
+          <div class="campo-error-msg">
+            <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+            <span>La dirección es obligatoria</span>
+          </div>
+        }
+      </div>
+
+      <div class="coords-row">
+        <div class="campo-grupo">
+          <label class="campo-label">Zona / Barrio</label>
+          <ion-input formControlName="zona" placeholder="Ej: Guanarteme" type="text" class="campo-input"></ion-input>
+        </div>
+        <div class="campo-grupo">
+          <label class="campo-label">Sector</label>
+          <ion-input formControlName="sector" placeholder="Ej: A" type="text" class="campo-input"></ion-input>
+        </div>
+      </div>
+
+      <div class="coords-row">
+        <div class="campo-grupo">
+          <label class="campo-label">Latitud</label>
+          <ion-input formControlName="latitud" placeholder="Toca el mapa" type="number" [readonly]="true" class="campo-input campo-readonly"></ion-input>
+        </div>
+        <div class="campo-grupo">
+          <label class="campo-label">Longitud</label>
+          <ion-input formControlName="longitud" placeholder="Toca el mapa" type="number" [readonly]="true" class="campo-input campo-readonly"></ion-input>
+        </div>
+      </div>
+
+      <div class="campo-grupo">
+        <label class="campo-label">Observaciones</label>
+        <ion-textarea formControlName="observaciones" placeholder="Información adicional relevante..." rows="3" class="campo-textarea"></ion-textarea>
+      </div>
+
+      <div class="campo-grupo">
+        <label class="campo-label">Incidencias físicas</label>
+        <ion-textarea formControlName="incidencias_fisicas" placeholder="Ej: bordillo bajo, rampa en buen estado..." rows="2" class="campo-textarea"></ion-textarea>
+      </div>
+    </div>
+
+    <!-- SEÑALIZACIÓN -->
+    <div class="seccion-form">
+      <h3 class="seccion-titulo">
+        <ion-icon name="warning" aria-hidden="true"></ion-icon>
+        Señalización
+      </h3>
+
+      <div class="toggle-grupo">
+        <div class="toggle-info">
+          <ion-icon name="alert" aria-hidden="true"></ion-icon>
+          <span class="toggle-label">Señal vertical</span>
+        </div>
+        <ion-toggle formControlName="senal_vertical"></ion-toggle>
+      </div>
+      <div class="toggle-grupo">
+        <div class="toggle-info">
+          <ion-icon name="grid" aria-hidden="true"></ion-icon>
+          <span class="toggle-label">Marcas en suelo</span>
+        </div>
+        <ion-toggle formControlName="marcas_en_suelo"></ion-toggle>
+      </div>
+    </div>
+
+    <!-- ACCESIBILIDAD -->
+    <div class="seccion-form">
+      <h3 class="seccion-titulo">
+        <ion-icon name="accessibility" aria-hidden="true"></ion-icon>
+        Accesibilidad y entorno
+      </h3>
+
+      <div class="toggle-grupo">
+        <div class="toggle-info">
+          <ion-icon name="car" aria-hidden="true"></ion-icon>
+          <span class="toggle-label">Acceso furgonetas</span>
+        </div>
+        <ion-toggle formControlName="acceso_furgonetas"></ion-toggle>
+      </div>
+      <div class="toggle-grupo">
+        <div class="toggle-info">
+          <ion-icon name="bulb" aria-hidden="true"></ion-icon>
+          <span class="toggle-label">Iluminación</span>
+        </div>
+        <ion-toggle formControlName="iluminacion"></ion-toggle>
+      </div>
+
+      <div class="coords-row" style="margin-top: 14px">
+        <div class="campo-grupo">
+          <label class="campo-label">Pendiente</label>
+          <ion-input formControlName="pendiente" placeholder="Ej: llano, leve..." type="text" class="campo-input"></ion-input>
+        </div>
+        <div class="campo-grupo">
+          <label class="campo-label">Pavimento</label>
+          <ion-input formControlName="pavimento" placeholder="Ej: asfalto..." type="text" class="campo-input"></ion-input>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTOS -->
+    <div class="seccion-form">
+      <h3 class="seccion-titulo">
+        <ion-icon name="camera" aria-hidden="true"></ion-icon>
+        Fotos <span class="seccion-opcional">(opcional)</span>
+      </h3>
+
+      <div class="foto-botones">
+        <button class="foto-btn" type="button" (click)="tomarFoto()">
+          <ion-icon name="camera" aria-hidden="true"></ion-icon>
+          <span>Hacer foto</span>
+        </button>
+        <button class="foto-btn" type="button" (click)="seleccionarDeGaleria()">
+          <ion-icon name="images" aria-hidden="true"></ion-icon>
+          <span>Galería</span>
+        </button>
+        <input id="fotos-input" type="file" accept="image/*" multiple (change)="onFotosSeleccionadas($event)" hidden />
+      </div>
+
+      @if (fotosPreviews.length > 0) {
+        <div class="fotos-grid">
+          @for (preview of fotosPreviews; track $index; let i = $index) {
+            <div class="foto-item">
+              <img [src]="preview" class="foto-thumb" [alt]="'Foto ' + (i + 1)" />
+              <button class="foto-eliminar" type="button" (click)="eliminarFoto(i)" [attr.aria-label]="'Eliminar foto ' + (i + 1)">
+                <ion-icon name="close-circle" aria-hidden="true"></ion-icon>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  </form>
+
+  @if (error) {
+    <div class="error-banner" role="alert">
+      <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+      <span>{{ error }}</span>
+    </div>
+  }
+
+</ion-content>
+
+<ion-footer>
+  <div class="footer-acciones">
+    <button class="btn-footer btn-cancelar" type="button" (click)="cancelar()">
+      Cancelar
+    </button>
+    <button
+      class="btn-footer btn-enviar"
+      type="button"
+      (click)="guardarPlaza()"
+      [disabled]="!formulario.valid || loading">
+      @if (loading) {
+        <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+      } @else {
+        <ion-icon name="send" aria-hidden="true"></ion-icon>
+      }
+      <span>{{ loading ? 'Enviando...' : 'Enviar plaza' }}</span>
+    </button>
+  </div>
+  <div class="safe-area-bottom"></div>
+</ion-footer>

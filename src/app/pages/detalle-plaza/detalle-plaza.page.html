@@ -1,0 +1,387 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="toolbar-pmr">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="toolbar-titulo">Detalle Plaza</ion-title>
+    <ion-buttons slot="end">
+      <app-font-scale-button></app-font-scale-button>
+      <ion-button (click)="reportarIncidencia()" aria-label="Reportar incidencia" class="btn-incidencia-toolbar">
+        <ion-icon slot="icon-only" name="warning-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="detalle-content" [style.--font-scale]="fontScale">
+
+  <!-- SPINNER DE CARGA -->
+  @if (loading) {
+    <div class="spinner-wrapper" role="status" aria-label="Cargando información de la plaza">
+      <ion-spinner name="crescent" class="spinner-centro"></ion-spinner>
+      <p class="spinner-texto">Cargando plaza...</p>
+    </div>
+  }
+
+  <!-- MENSAJE DE NOTIFICACIÓN -->
+  @if (mostrarMensaje) {
+    <div
+      class="mensaje-alert"
+      [class]="'mensaje-' + tipoMensaje"
+      role="alert"
+      aria-live="assertive">
+      <ion-icon
+        [name]="tipoMensaje === 'success' ? 'checkmark-circle' : tipoMensaje === 'error' ? 'alert-circle' : 'information-circle'"
+        class="mensaje-icon"
+        aria-hidden="true">
+      </ion-icon>
+      <span class="mensaje-texto">{{ mensaje }}</span>
+    </div>
+  }
+
+  @if (!loading && plaza) {
+
+    <!-- ═══════════════ MAPA PRINCIPAL (SIEMPRE VISIBLE) ═══════════════ -->
+    <div class="mapa-principal-wrapper">
+      <div #miniMapContainer class="mapa-principal" role="img" [attr.aria-label]="'Mapa de ubicación de la plaza en ' + plaza.direccion"></div>
+
+      <!-- Overlay badge estado sobre el mapa -->
+      <div class="mapa-estado-badge" [class]="plaza.estado === 'libre' ? 'badge-libre' : 'badge-ocupada'" aria-live="polite">
+        <ion-icon [name]="plaza.estado === 'libre' ? 'checkmark-circle' : 'close-circle'" aria-hidden="true"></ion-icon>
+        {{ plaza.estado === 'libre' ? 'LIBRE' : 'OCUPADA' }}
+      </div>
+
+      <!-- Botón localizar usuario en el mapa -->
+      <button class="btn-localizar-mapa" (click)="calcularDistancia()" aria-label="Localizar mi posición en el mapa">
+        <ion-icon name="locate" aria-hidden="true"></ion-icon>
+      </button>
+    </div>
+
+    <!-- ═══════════════ CABECERA / INFO PRINCIPAL ═══════════════ -->
+    <div class="cabecera-pmr">
+      <h1 class="direccion-titulo" aria-label="Dirección de la plaza: {{ plaza.direccion }}">
+        <ion-icon name="location" color="primary" aria-hidden="true"></ion-icon>
+        {{ plaza.direccion }}
+      </h1>
+
+      <div class="tags-row" aria-label="Información de zona">
+        @if (plaza.zona) {
+          <span class="tag-zona">
+            <ion-icon name="map-outline" aria-hidden="true"></ion-icon>
+            {{ plaza.zona }}{{ plaza.sector ? ' · ' + plaza.sector : '' }}
+          </span>
+        }
+        @if (distanciaActual !== null) {
+          <span class="tag-distancia" [class]="puedeOcupar ? 'distancia-ok' : 'distancia-lejos'"
+            [attr.aria-label]="'Distancia a la plaza: ' + Math.round(distanciaActual) + ' metros'">
+            <ion-icon [name]="puedeOcupar ? 'walk' : 'alert-circle'" aria-hidden="true"></ion-icon>
+            {{ Math.round(distanciaActual) }}m
+          </span>
+        }
+      </div>
+
+      <!-- Nota distancia -->
+      @if (plaza.estado === 'libre' && distanciaActual === null) {
+        <div class="nota-acceso nota-info">
+          <ion-icon name="information-circle" aria-hidden="true"></ion-icon>
+          <span>Comprueba tu distancia antes de ocupar</span>
+        </div>
+      }
+
+      @if (plaza.estado === 'libre' && distanciaActual !== null && !puedeOcupar) {
+        <div class="nota-acceso nota-error" role="alert">
+          <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+          <span>Debes estar a menos de 30m para ocupar esta plaza</span>
+        </div>
+      }
+
+      @if (plaza.estado === 'ocupada') {
+        <div class="nota-acceso nota-warning" role="status">
+          <ion-icon name="time" aria-hidden="true"></ion-icon>
+          <span>
+            Plaza ocupada ·
+            @if (obtenerTiempoFaltante()) {
+              Se libera en {{ obtenerTiempoFaltante() }}
+            } @else {
+              Se liberará automáticamente
+            }
+          </span>
+        </div>
+      }
+    </div>
+
+    <!-- ═══════════════ BOTONES DE ACCIÓN PRINCIPALES ═══════════════ -->
+
+    <!-- SELECTOR DE DURACIÓN (solo cuando plaza está libre) -->
+    @if (plaza.estado === 'libre') {
+      <div class="selector-duracion" role="group" aria-label="Seleccionar duración de ocupación">
+        <label class="duracion-label">¿Cuánto tiempo estará el vehículo?</label>
+        <div class="duracion-botones">
+          @for (duracion of duracionesDisponibles; track duracion.minutos) {
+            <button
+              type="button"
+              class="btn-duracion"
+              [class.activo]="duracionSeleccionada === duracion.minutos"
+              (click)="seleccionarDuracion(duracion.minutos)"
+              [attr.aria-pressed]="duracionSeleccionada === duracion.minutos"
+              [attr.aria-label]="'Ocupar plaza por ' + duracion.label">
+              {{ duracion.label }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="acciones-pmr" role="group" aria-label="Acciones disponibles para esta plaza">
+
+      <!-- OCUPAR -->
+      @if (plaza.estado === 'libre') {
+        <button
+          class="btn-accion btn-ocupar"
+          (click)="ocuparPlaza()"
+          [disabled]="accionando || !puedeOcupar"
+          [attr.aria-label]="'Marcar plaza como ocupada por ' + obtenerLabelDuracion() + (!puedeOcupar ? ', no disponible: debes estar a menos de 30 metros' : '')"
+          [attr.aria-disabled]="accionando || !puedeOcupar">
+          <ion-icon name="car" aria-hidden="true"></ion-icon>
+          <span>Ocupar plaza</span>
+        </button>
+      }
+
+      <!-- OCUPADA POR OTRO VEHÍCULO -->
+      @if (plaza.estado === 'libre') {
+        <button
+          class="btn-accion btn-otro-vehiculo"
+          (click)="ocuparPorOtroVehiculo()"
+          [disabled]="accionando || !puedeOcupar"
+          [attr.aria-label]="'Marcar plaza como ocupada por otro vehículo' + (!puedeOcupar ? ', no disponible: debes estar a menos de 30 metros' : '')"
+          [attr.aria-disabled]="accionando || !puedeOcupar">
+          <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+          <span>Ocupada por otro vehículo</span>
+        </button>
+      }
+
+      <!-- LIBERAR -->
+      @if (plaza.estado === 'ocupada') {
+        <button
+          class="btn-accion btn-liberar"
+          (click)="liberarPlaza()"
+          [disabled]="accionando"
+          [attr.aria-label]="!puedeLiberar && distanciaActual !== null ? 'Debes estar a menos de 30 metros para liberar la plaza' : 'Marcar plaza como libre'"
+          [attr.aria-disabled]="accionando">
+          <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
+          <span>Liberar plaza</span>
+        </button>
+      }
+
+      <!-- REPORTAR INCIDENCIA -->
+      <button
+        class="btn-accion btn-incidencia"
+        (click)="reportarIncidencia()"
+        aria-label="Reportar un problema o incidencia en esta plaza">
+        <ion-icon name="warning" aria-hidden="true"></ion-icon>
+        <span>Reportar problema</span>
+      </button>
+
+    </div>
+
+    <!-- Nota distancia para liberar -->
+    @if (plaza.estado === 'ocupada' && distanciaActual !== null && !puedeOcupar) {
+      <div class="nota-acceso nota-error" style="margin: 0 16px 12px;" role="note">
+        <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+        <span>Debes estar a menos de 30m para liberar esta plaza</span>
+      </div>
+    }
+
+    <!-- ═══════════════ UBICACIÓN ═══════════════ -->
+    <ion-card class="seccion-card card-ubicacion">
+      <ion-card-header>
+        <ion-card-title class="card-title-pmr">
+          <ion-icon name="navigate-circle" color="primary" aria-hidden="true"></ion-icon>
+          Ubicación
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="ubicacion-dir">{{ plaza.direccion }}</p>
+        <ion-button
+          expand="block"
+          color="primary"
+          size="large"
+          class="btn-gps"
+          (click)="comoLlegar()"
+          aria-label="Abrir navegación GPS para llegar a la plaza">
+          <ion-icon slot="start" name="navigate" aria-hidden="true"></ion-icon>
+          Cómo llegar (GPS)
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ═══════════════ ESTADO ACTUAL ═══════════════ -->
+    <ion-card class="seccion-card">
+      <ion-card-header>
+        <ion-card-title class="card-title-pmr">
+          <ion-icon name="information-circle" color="primary" aria-hidden="true"></ion-icon>
+          Estado actual
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="specs-grid">
+          <div class="spec-item" role="listitem">
+            <span class="spec-label">Señal vertical</span>
+            <span class="spec-valor" [class]="plaza.senal_vertical ? 'valor-si' : 'valor-no'"
+              [attr.aria-label]="'Señal vertical: ' + (plaza.senal_vertical ? 'Sí' : 'No')">
+              {{ plaza.senal_vertical ? 'Sí' : 'No' }}
+            </span>
+          </div>
+          <div class="spec-item" role="listitem">
+            <span class="spec-label">Marcas en suelo</span>
+            <span class="spec-valor" [class]="plaza.marcas_en_suelo ? 'valor-si' : 'valor-no'"
+              [attr.aria-label]="'Marcas en suelo: ' + (plaza.marcas_en_suelo ? 'Sí' : 'No')">
+              {{ plaza.marcas_en_suelo ? 'Sí' : 'No' }}
+            </span>
+          </div>
+        </div>
+
+        @if (plaza.observaciones) {
+          <div class="observaciones-box" role="note">
+            <span class="spec-label">Observaciones</span>
+            <p class="observaciones-texto">{{ plaza.observaciones }}</p>
+          </div>
+        }
+
+        @if (plaza.incidencias_fisicas) {
+          <div class="observaciones-box incidencia-box" role="note">
+            <span class="spec-label">Incidencias físicas</span>
+            <p class="observaciones-texto">{{ plaza.incidencias_fisicas }}</p>
+          </div>
+        }
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ═══════════════ ACCESIBILIDAD Y ENTORNO (2 en 2) ═══════════════ -->
+    <ion-card class="seccion-card card-accesibilidad">
+      <ion-card-header>
+        <ion-card-title class="card-title-pmr">
+          <ion-icon name="accessibility" color="primary" aria-hidden="true"></ion-icon>
+          Accesibilidad
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="accesibilidad-grid-dos" role="list" aria-label="Características de accesibilidad">
+
+          <!-- Fila 1: Furgonetas + Iluminación -->
+          <div class="acc-row-dos">
+            <div class="acc-item-dos" role="listitem">
+              <div class="acc-header">
+                <ion-icon name="bus" class="acc-icon" aria-hidden="true"></ion-icon>
+                <span class="acc-label">Furgonetas</span>
+              </div>
+              <span class="acc-valor" [ngClass]="plaza.acceso_furgonetas ? 'valor-si' : 'valor-no'"
+                [attr.aria-label]="'Acceso para furgonetas: ' + (plaza.acceso_furgonetas ? 'Disponible' : 'No disponible')">
+                {{ plaza.acceso_furgonetas ? '✓ Sí' : '✗ No' }}
+              </span>
+            </div>
+            <div class="acc-item-dos" role="listitem">
+              <div class="acc-header">
+                <ion-icon name="sunny" class="acc-icon" aria-hidden="true"></ion-icon>
+                <span class="acc-label">Iluminación</span>
+              </div>
+              <span class="acc-valor" [ngClass]="plaza.iluminacion ? 'valor-si' : 'valor-no'"
+                [attr.aria-label]="'Iluminación: ' + (plaza.iluminacion ? 'Buena' : 'Escasa')">
+                {{ plaza.iluminacion ? '✓ Sí' : '✗ No' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Fila 2: Pavimento + Pendiente -->
+          <div class="acc-row-dos">
+            <div class="acc-item-dos" role="listitem">
+              <div class="acc-header">
+                <ion-icon name="grid" class="acc-icon" aria-hidden="true"></ion-icon>
+                <span class="acc-label">Pavimento</span>
+              </div>
+              <span class="acc-valor valor-neutro"
+                [attr.aria-label]="'Tipo de pavimento: ' + (plaza.pavimento || 'No especificado')">
+                {{ plaza.pavimento || '—' }}
+              </span>
+            </div>
+            <div class="acc-item-dos" role="listitem">
+              <div class="acc-header">
+                <ion-icon name="trending-up" class="acc-icon" aria-hidden="true"></ion-icon>
+                <span class="acc-label">Pendiente</span>
+              </div>
+              <span class="acc-valor valor-neutro"
+                [attr.aria-label]="'Pendiente: ' + (plaza.pendiente || 'No especificada')">
+                {{ plaza.pendiente || '—' }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ═══════════════ ENTORNO ═══════════════ -->
+    <ion-card class="seccion-card card-entorno">
+      <ion-card-header>
+        <ion-card-title class="card-title-pmr">
+          <ion-icon name="location-outline" color="primary" aria-hidden="true"></ion-icon>
+          Entorno
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="accesibilidad-grid-dos" role="list" aria-label="Características del entorno">
+
+          <!-- Fila 1: Señal + Marcas -->
+          <div class="acc-row-dos">
+            <div class="acc-item-dos" role="listitem">
+              <div class="acc-header">
+                <ion-icon name="warning" class="acc-icon" aria-hidden="true"></ion-icon>
+                <span class="acc-label">Señal vertical</span>
+              </div>
+              <span class="acc-valor" [ngClass]="plaza.senal_vertical ? 'valor-si' : 'valor-no'"
+                [attr.aria-label]="'Señal vertical: ' + (plaza.senal_vertical ? 'Presente' : 'Ausente')">
+                {{ plaza.senal_vertical ? '✓ Sí' : '✗ No' }}
+              </span>
+            </div>
+            <div class="acc-item-dos" role="listitem">
+              <div class="acc-header">
+                <ion-icon name="shapes" class="acc-icon" aria-hidden="true"></ion-icon>
+                <span class="acc-label">Marcas en suelo</span>
+              </div>
+              <span class="acc-valor" [ngClass]="plaza.marcas_en_suelo ? 'valor-si' : 'valor-no'"
+                [attr.aria-label]="'Marcas en suelo: ' + (plaza.marcas_en_suelo ? 'Visibles' : 'No visibles')">
+                {{ plaza.marcas_en_suelo ? '✓ Sí' : '✗ No' }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Observaciones y Incidencias -->
+        @if (plaza.observaciones || plaza.incidencias_fisicas) {
+          <div class="detalles-extras">
+            @if (plaza.observaciones) {
+              <div class="detalle-box" role="note">
+                <strong class="detalle-label">📝 Observaciones</strong>
+                <p class="detalle-texto">{{ plaza.observaciones }}</p>
+              </div>
+            }
+            @if (plaza.incidencias_fisicas) {
+              <div class="detalle-box incidencia-box" role="alert">
+                <strong class="detalle-label">⚠ Incidencias físicas</strong>
+                <p class="detalle-texto">{{ plaza.incidencias_fisicas }}</p>
+              </div>
+            }
+          </div>
+        }
+      </ion-card-content>
+    </ion-card>
+
+  }
+
+
+</ion-content>
+
+<ion-footer>
+  <div class="safe-area-bottom"></div>
+</ion-footer>

@@ -1,0 +1,14 @@
+// ranking.module.ts
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { RankingPageRoutingModule } from './ranking-routing.module';
+import { RankingPage } from './ranking.page';
+import { SharedModule } from '../../shared.module';
+
+@NgModule({
+  imports: [CommonModule, FormsModule, IonicModule, RankingPageRoutingModule, SharedModule],
+  declarations: [RankingPage]
+})
+export class RankingModule {}

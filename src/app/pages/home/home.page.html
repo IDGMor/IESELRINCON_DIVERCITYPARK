@@ -1,0 +1,317 @@
+<ion-header [translucent]="false">
+  <ion-toolbar class="toolbar-home">
+
+    <ion-title>
+      <div class="titulo-header" aria-label="IESELRINCON">
+        <ion-icon name="accessibility" aria-hidden="true"></ion-icon>
+        <span class="titulo-texto">IESELRINCON</span>
+      </div>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <app-font-scale-button></app-font-scale-button>
+
+      @if (nombreUsuario) {
+        <ion-button fill="clear" (click)="irPerfil()" class="header-button"
+          [attr.aria-label]="'Perfil de ' + nombreUsuario">
+          <ion-icon name="person-circle" aria-hidden="true" class="header-icon"></ion-icon>
+        </ion-button>
+      } @else {
+        <ion-button fill="clear" (click)="irLogin()" class="header-button" aria-label="Iniciar sesión">
+          <ion-icon name="log-in-outline" aria-hidden="true" class="header-icon"></ion-icon>
+        </ion-button>
+      }
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="false" class="contenido-principal" [style.--font-scale]="fontScale">
+
+  <!-- ══════════════ MAPA A PANTALLA COMPLETA ══════════════ -->
+  <div class="mapa-fullscreen" role="region" aria-label="Mapa de plazas PMR">
+
+    <!-- El mapa -->
+    <div #mapContainer id="map" class="mapa-container"
+      role="img"
+      aria-label="Mapa interactivo con las plazas PMR disponibles">
+    </div>
+
+    <!-- ── Barra de búsqueda flotante ── -->
+    <div class="mapa-buscador-wrapper">
+      <ion-searchbar
+        [(ngModel)]="searchTerm"
+        (ionInput)="buscarConDebounce($event)"
+        (ionClear)="limpiarBusqueda()"
+        placeholder="Buscar zona..."
+        class="searchbar-mapa"
+        animated="true"
+        debounce="500"
+        aria-label="Buscar calle">
+      </ion-searchbar>
+      <button
+        class="btn-buscar-zona"
+        (click)="buscarConDebounce({})"
+        aria-label="Buscar zona"
+        title="Buscar zona"
+        [disabled]="!searchTerm || searchTerm.trim().length < 3">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="btn-svg-icon" aria-hidden="true">
+          <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ── Botón voz / micrófono ── -->
+    <button
+      class="btn-voz"
+      [class.escuchando]="vozEscuchando"
+      (click)="iniciarVoz()"
+      [disabled]="vozEscuchando"
+      aria-label="Buscar por voz"
+      [attr.aria-busy]="vozEscuchando"
+      title="Buscar por voz">
+      @if (vozEscuchando) {
+        <ion-spinner name="dots" class="spinner-voz" aria-hidden="true"></ion-spinner>
+      } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="btn-svg-icon" aria-hidden="true">
+          <path d="M192 0C139 0 96 43 96 96V256c0 53 43 96 96 96s96-43 96-96V96c0-53-43-96-96-96zM64 216c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c0 89.1 66.2 162.7 152 174.4V464H120c-13.3 0-24 10.7-24 24s10.7 24 24 24h72 72c13.3 0 24-10.7 24-24s-10.7-24-24-24H216V430.4c85.8-11.7 152-85.3 152-174.4V216c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c0 70.7-57.3 128-128 128s-128-57.3-128-128V216z" fill="currentColor"/>
+        </svg>
+      }
+    </button>
+
+    <!-- ── Banner resultado búsqueda + selector rango ── -->
+    @if (buscandoPorCoordenadas && resultadoBusqueda) {
+      <div class="banner-busqueda-wrapper">
+        <div class="banner-busqueda" role="status" aria-live="polite">
+          <ion-icon name="location" aria-hidden="true"></ion-icon>
+          <div class="banner-texto">
+            <strong>{{ plazasFiltered.length }} plaza{{ plazasFiltered.length !== 1 ? 's' : '' }}</strong>
+            en {{ rangoSeleccionado }}m de <em>{{ resultadoBusqueda }}</em>
+          </div>
+          <button class="btn-navegar-zona"
+            (click)="comoLlegar(coordsBusqueda?.lat?.toString(), coordsBusqueda?.lng?.toString())"
+            aria-label="Navegar a esta zona">
+            <ion-icon name="navigate"></ion-icon>
+          </button>
+          <button class="btn-cerrar-busqueda" (click)="limpiarBusqueda()" aria-label="Cancelar búsqueda">
+            <ion-icon name="close-circle" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+        <div class="rango-selector-busqueda" role="group" aria-label="Radio de búsqueda en metros">
+          @for (r of rangos; track r) {
+            <button
+              class="btn-rango"
+              [class.activo]="rangoSeleccionado === r"
+              (click)="seleccionarRango(r)"
+              [attr.aria-pressed]="rangoSeleccionado === r"
+              [attr.aria-label]="r + ' metros'">
+              {{ r }}m
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- ── Error toast ── -->
+    @if (error) {
+      <div class="error-toast" role="alert">
+        <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+        {{ error }}
+      </div>
+    }
+
+  </div>
+
+
+</ion-content>
+
+<!-- ══════════════ MODAL DETALLE PLAZA ══════════════ -->
+<ion-modal
+  [isOpen]="plazaSeleccionada !== null"
+  (didDismiss)="cerrarModal()"
+  [initialBreakpoint]="0.6"
+  [breakpoints]="[0, 0.6, 0.95]"
+  handleBehavior="cycle">
+
+  <ng-template>
+    @if (plazaSeleccionada) {
+
+      <ion-content class="modal-plaza-content">
+
+        <!-- ── Foto o placeholder ── -->
+        @if (plazaSeleccionada.fotos && plazaSeleccionada.fotos.length > 0 && !plazaFotoError) {
+          <div class="modal-foto">
+            <img [src]="getDirectLink(plazaSeleccionada.fotos[0])" [alt]="plazaSeleccionada.direccion" (error)="plazaFotoError = true" />
+          </div>
+        } @else {
+          <div class="modal-foto modal-foto-placeholder">
+            <ion-icon name="camera-outline"></ion-icon>
+            <span>Sin fotos disponibles</span>
+          </div>
+        }
+
+        <div class="modal-body">
+
+          <!-- ── Notificación ── -->
+          @if (modalMostrarMensaje) {
+            <div class="modal-mensaje" [class]="'modal-mensaje-' + modalTipoMensaje" role="alert">
+              <ion-icon [name]="modalTipoMensaje === 'success' ? 'checkmark-circle' : modalTipoMensaje === 'error' ? 'alert-circle' : 'information-circle'"></ion-icon>
+              <span>{{ modalMensaje }}</span>
+            </div>
+          }
+
+          <!-- ── Badges de estado ── -->
+          <div class="modal-badges">
+            <span class="badge" [class]="plazaSeleccionada.estado === 'libre' ? 'badge-libre' : 'badge-ocupada'">
+              <ion-icon [name]="plazaSeleccionada.estado === 'libre' ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+              {{ plazaSeleccionada.estado === 'libre' ? 'Libre' : 'Ocupada' }}
+            </span>
+            @if (plazaSeleccionada.zona) {
+              <span class="badge badge-zona">
+                <ion-icon name="map-outline"></ion-icon>
+                {{ plazaSeleccionada.zona }}
+              </span>
+            }
+            @if (modalDistancia !== null) {
+              <span class="badge" [class]="modalPuedeOcupar ? 'badge-distancia-ok' : 'badge-distancia-lejos'">
+                <ion-icon [name]="modalPuedeOcupar ? 'walk' : 'alert-circle'"></ion-icon>
+                {{ Math.round(modalDistancia) }}m
+              </span>
+            }
+          </div>
+
+          <!-- ── Dirección ── -->
+          <h2 class="modal-direccion">
+            <ion-icon name="location" color="primary"></ion-icon>
+            {{ plazaSeleccionada.direccion }}
+          </h2>
+          @if (plazaSeleccionada.sector) {
+            <p class="modal-sector">{{ plazaSeleccionada.zona }}{{ plazaSeleccionada.sector ? ' · ' + plazaSeleccionada.sector : '' }}</p>
+          }
+
+          <!-- ── Nota estado ocupada ── -->
+          @if (plazaSeleccionada.estado === 'ocupada') {
+            <div class="modal-nota modal-nota-warning">
+              <ion-icon name="time"></ion-icon>
+              <span>
+                Plaza ocupada ·
+                @if (obtenerTiempoFaltante()) {
+                  Se libera en {{ obtenerTiempoFaltante() }}
+                } @else {
+                  Se liberará automáticamente
+                }
+              </span>
+            </div>
+          }
+
+          <!-- ── Nota distancia ── -->
+          @if (modalDistancia !== null && !modalPuedeOcupar) {
+            <div class="modal-nota modal-nota-error">
+              <ion-icon name="alert-circle"></ion-icon>
+              <span>Debes estar a menos de 30m para actuar sobre esta plaza</span>
+            </div>
+          }
+
+          <!-- ── Selector de duración (cuando libre) ── -->
+          @if (plazaSeleccionada.estado === 'libre' && estaAutenticado) {
+            <div class="modal-duracion">
+              <p class="duracion-label">¿Cuánto tiempo estará el vehículo?</p>
+              <div class="duracion-botones">
+                @for (d of duracionesModal; track d.minutos) {
+                  <button
+                    class="btn-duracion"
+                    [class.activo]="modalDuracion === d.minutos"
+                    (click)="modalDuracion = d.minutos">
+                    {{ d.label }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- ── Botones de acción plaza ── -->
+          @if (estaAutenticado) {
+            <div class="modal-acciones-plaza">
+
+              <!-- Verificar distancia -->
+              @if (modalDistancia === null) {
+                <button class="btn-plaza btn-comprobar" (click)="calcularDistanciaModal()" [disabled]="modalAccionando">
+                  <ion-icon name="locate"></ion-icon>
+                  Comprobar mi distancia
+                </button>
+              }
+
+              <!-- Ocupar -->
+              @if (plazaSeleccionada.estado === 'libre') {
+                <button class="btn-plaza btn-ocupar" (click)="ocuparPlazaModal()" [disabled]="modalAccionando || (modalDistancia !== null && !modalPuedeOcupar)">
+                  @if (modalAccionando) { <ion-spinner name="crescent"></ion-spinner> }
+                  @else { <ion-icon name="car"></ion-icon> }
+                  Ocupar plaza
+                </button>
+                <button class="btn-plaza btn-otro" (click)="ocuparPorOtroVehiculoModal()" [disabled]="modalAccionando || (modalDistancia !== null && !modalPuedeOcupar)">
+                  <ion-icon name="alert-circle"></ion-icon>
+                  Ocupada por otro vehículo
+                </button>
+              }
+
+              <!-- Liberar -->
+              @if (plazaSeleccionada.estado === 'ocupada') {
+                <button class="btn-plaza btn-liberar" (click)="liberarPlazaModal()" [disabled]="modalAccionando || (modalDistancia !== null && !modalPuedeLiberar)">
+                  @if (modalAccionando) { <ion-spinner name="crescent"></ion-spinner> }
+                  @else { <ion-icon name="checkmark-circle"></ion-icon> }
+                  Liberar plaza
+                </button>
+              }
+
+            </div>
+          }
+
+          <!-- ── Grid de características ── -->
+          <div class="modal-features">
+            <div class="feature-item" [class.ok]="plazaSeleccionada.iluminacion" [class.ko]="!plazaSeleccionada.iluminacion">
+              <ion-icon name="bulb-outline"></ion-icon>
+              <span>Iluminación</span>
+            </div>
+            <div class="feature-item" [class.ok]="plazaSeleccionada.senal_vertical" [class.ko]="!plazaSeleccionada.senal_vertical">
+              <ion-icon name="information-circle-outline"></ion-icon>
+              <span>Señal vertical</span>
+            </div>
+            <div class="feature-item" [class.ok]="plazaSeleccionada.marcas_en_suelo" [class.ko]="!plazaSeleccionada.marcas_en_suelo">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              <span>Marcas suelo</span>
+            </div>
+            <div class="feature-item" [class.ok]="plazaSeleccionada.acceso_furgonetas" [class.ko]="!plazaSeleccionada.acceso_furgonetas">
+              <ion-icon name="car-outline"></ion-icon>
+              <span>Furgonetas</span>
+            </div>
+          </div>
+
+          <!-- ── Observaciones ── -->
+          @if (plazaSeleccionada.observaciones || plazaSeleccionada.incidencias_fisicas) {
+            <div class="modal-observaciones">
+              <p class="obs-label">Observaciones</p>
+              <p class="obs-texto">
+                {{ plazaSeleccionada.incidencias_fisicas ? plazaSeleccionada.incidencias_fisicas + '. ' : '' }}
+                {{ plazaSeleccionada.observaciones }}
+              </p>
+            </div>
+          }
+
+          <!-- ── Acciones inferiores ── -->
+          <div class="modal-acciones">
+            <button class="btn-modal-primary" (click)="comoLlegar(plazaSeleccionada.latitud, plazaSeleccionada.longitud)">
+              <ion-icon name="navigate"></ion-icon>
+              Cómo llegar (GPS)
+            </button>
+            <button class="btn-modal-incidencia" (click)="reportarIncidencia(plazaSeleccionada.id)">
+              <ion-icon name="warning-outline"></ion-icon>
+              Reportar problema en esta plaza
+            </button>
+          </div>
+
+        </div>
+      </ion-content>
+
+    }
+  </ng-template>
+</ion-modal>

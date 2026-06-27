@@ -1,0 +1,393 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * IESELRINCON App
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ */
+@import "@ionic/angular/css/palettes/dark.system.css";
+@import "@ionic/angular/css/palettes/dark.class.css";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary: #091426;
+  --color-primary-container: #1e293b;
+  --color-on-primary: #ffffff;
+  
+  --color-surface: #f7f9fb;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f4f6;
+  --color-surface-container: #eceef0;
+  --color-surface-container-highest: #e0e3e5;
+  
+  --color-on-surface: #191c1e;
+  --color-on-surface-variant: #45474c;
+  
+  --color-secondary-container: #6cf8bb;
+  --color-on-secondary-container: #00714d;
+  
+  --color-tertiary-container: #590016;
+  --color-on-tertiary-container: #ff4e69;
+
+  --shadow-whisper: 0 8px 24px rgba(25, 28, 30, 0.06);
+}
+
+.ion-palette-dark {
+  // ── Variables CSS personalizadas ──────────────────────────────
+  --color-surface: #121212;
+  --color-surface-container-lowest: #0a0a0a;
+  --color-surface-container-low: #1a1a1a;
+  --color-surface-container: #1e1e1e;
+  --color-surface-container-highest: #2a2a2a;
+  --color-on-surface: #e2e8f0;
+  --color-on-surface-variant: #94a3b8;
+  --shadow-whisper: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --pmr-gris-claro: #1f2937;
+  --pmr-borde:      #374151;
+  --pmr-gris:       #f3f4f6;
+
+  // ── Perfil ─────────────────────────────────────────────────
+  .perfil-content   { --background: #121212 !important; }
+  .info-card        { --background: #1e1e1e !important; background: #1e1e1e !important; }
+  .dato-label       { color: #9ca3af !important; }
+  .dato-valor       { color: #f3f4f6 !important; }
+  .punto-item       { color: #d1d5db !important; }
+
+  // ── Ranking ────────────────────────────────────────────────
+  .ranking-content  { --background: #121212 !important; }
+  .info-puntos {
+    background: #1e1e1e !important;
+    border-bottom-color: #333 !important;
+    p          { color: #e0e0e0 !important; }
+    p ion-icon { color: #60a5fa !important; }
+    p strong   { color: #ffffff !important; }
+  }
+  .lista-ranking {
+    ion-item-divider { background: #1a1a2e !important; --background: #1a1a2e !important; color: #60a5fa !important; --color: #60a5fa !important; }
+    ion-item         { --background: #1e1e1e !important; h2 { color: #f3f4f6 !important; } p { color: #9ca3af !important; } }
+  }
+  .posicion     { background: #374151 !important; color: #e0e0e0 !important; }
+  .badge-puntos { --background: #1e293b !important; --color: #ffffff !important; }
+
+  // ── Login y Registro ───────────────────────────────────────
+  .login-card, .registro-card { background: #1e1e1e !important; box-shadow: 0 20px 60px rgba(0,0,0,0.6) !important; }
+  .form-title   { color: #f3f4f6 !important; }
+  .input-item   { --background: #2a2a2a !important; --color: #f3f4f6 !important; border: 1px solid #444 !important; }
+  .input-icon   { color: #60a5fa !important; }
+  .campo-error  { color: #f87171 !important; }
+  .error-banner { background: #3b0f0f !important; color: #f87171 !important; border: 1px solid #7f1d1d !important; border-left-color: #f87171 !important; }
+  .separador {
+    span      { background: #1e1e1e !important; color: #9ca3af !important; }
+    &::before { background: #444 !important; }
+  }
+  .btn-login    { --color: #4ade80 !important; --border-color: #4ade80 !important; }
+  .btn-registro { --color: #60a5fa !important; --border-color: #60a5fa !important; }
+  .skip-link ion-button { --color: #9ca3af !important; }
+
+  // ── Incidencias ────────────────────────────────────────────
+  .incidencia-content { background: #121212 !important; --background: #121212 !important; }
+  .exito-container    { background: #1e1e1e !important; }
+  .exito-titulo       { color: #f3f4f6 !important; }
+  .exito-texto        { color: #9ca3af !important; }
+  .seccion-formulario { background: #1f2937 !important; border-bottom-color: #111827 !important; }
+  .seccion-titulo     { color: #f3f4f6 !important; }
+  .label-texto        { color: #f3f4f6 !important; }
+  .label-ayuda        { color: #9ca3af !important; }
+  .campo-input, .campo-select, .campo-textarea { background: #374151 !important; color: #f3f4f6 !important; border-color: #4b5563 !important; }
+  .campo-error-msg    { background: #3b0f0f !important; color: #f87171 !important; border-color: #7f1d1d !important; }
+  .tipo-card          { background: #374151 !important; color: #f3f4f6 !important; border-color: #4b5563 !important; }
+  .foto-btn           { background: #374151 !important; color: #f3f4f6 !important; border-color: #4b5563 !important; }
+  .foto-preview-container { background: #2a2a2a !important; }
+  .foto-eliminar      { background: rgba(30,30,30,0.95) !important; }
+  .acciones-container { background: #1f2937 !important; border-top-color: #4b5563 !important; }
+  .error-contenido    { strong { color: #f87171 !important; } p { color: #fca5a5 !important; } }
+
+  // ── Detalle Plaza ──────────────────────────────────────────
+  .toolbar-buscador { --background: #111827 !important; border-color: #374151 !important; }
+  .searchbar-pmr    { --background: #1f2937 !important; --color: #f3f4f6 !important; --border-color: #374151 !important; }
+  .btn-rango        { background: #1f2937 !important; color: #d1d5db !important; border-color: #374151 !important; }
+  .mapa-principal-wrapper { border-color: #374151 !important; }
+  .btn-localizar-mapa     { background: #1f2937 !important; border-color: #374151 !important; color: #93c5fd !important; }
+  .seccion-card     { background: #1f2937 !important; border-color: #374151 !important; }
+  .card-title-pmr   { color: #f3f4f6 !important; }
+  .spec-label, .acc-label { color: #9ca3af !important; }
+  .spec-item, .acc-item   { background: #111827 !important; border-color: #374151 !important; }
+  .observaciones-box { background: #111827 !important; border-color: #374151 !important; }
+  .observaciones-texto, .ubicacion-dir, .direccion-titulo { color: #f3f4f6 !important; }
+  .valor-si, .valor-bueno  { background: #14532d !important; color: #86efac !important; border-color: #166534 !important; }
+  .valor-no, .valor-malo   { background: #450a0a !important; color: #fca5a5 !important; border-color: #7f1d1d !important; }
+  .valor-neutro            { background: #1f2937 !important; color: #d1d5db !important; border-color: #374151 !important; }
+  .nota-acceso             { background: #422006 !important; color: #fcd34d !important; border-color: #92400e !important; }
+  .nota-acceso.nota-info   { background: #1e3a5f !important; color: #93c5fd !important; border-color: #091426 !important; }
+  .nota-acceso.nota-error  { background: #450a0a !important; color: #fca5a5 !important; border-color: #7f1d1d !important; }
+  .tag-zona       { background: #1e3a5f !important; color: #93c5fd !important; }
+  .distancia-ok   { background: #14532d !important; color: #86efac !important; }
+  .distancia-lejos { background: #450a0a !important; color: #fca5a5 !important; }
+  .btn-incidencia  { background: #1f2937 !important; border-color: #d97706 !important; color: #fcd34d !important; }
+  .rango-selector .btn-rango { background: #1f2937 !important; border-color: #374151 !important; color: #d1d5db !important; }
+  .acc-item-dos    { background: #1f2937 !important; border-color: #374151 !important; }
+  .detalle-box     { background: #1e3a5f !important; border-left-color: #60a5fa !important; }
+  .detalle-box.incidencia-box { background: #422006 !important; border-left-color: #fbbf24 !important; }
+  .detalle-label   { color: #9ca3af !important; }
+  .detalle-texto   { color: #e0e0e0 !important; }
+  .selector-duracion { background: #1e3a5f !important; border-color: #374151 !important; }
+  .duracion-label  { color: #f3f4f6 !important; }
+  .btn-duracion    { background: #1f2937 !important; color: #d1d5db !important; border-color: #374151 !important; }
+  .spinner-texto   { color: #9ca3af !important; }
+
+  // ── Home / Mapa ────────────────────────────────────────────
+  .searchbar-mapa {
+    --background: rgba(30,30,30,0.97) !important;
+    --color: #f3f4f6 !important;
+    --placeholder-color: #9ca3af !important;
+    --icon-color: #9ca3af !important;
+    --box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+  }
+  .banner-busqueda {
+    background: rgba(30,30,30,0.97) !important;
+    border-left-color: #60a5fa !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+    ion-icon { color: #60a5fa !important; }
+  }
+  .banner-texto        { color: #e0e0e0 !important; strong, em { color: #60a5fa !important; } }
+  .error-toast         { background: #3b0f0f !important; border-color: #f87171 !important; color: #f87171 !important; }
+  .footer-principal    { background: #121212 !important; border-top-color: #333 !important; }
+  .banner-login-barra  { background: rgba(29,78,216,0.15) !important; border-bottom-color: #333 !important; span { color: #9ca3af !important; } }
+  .btn-barra                { color: #9ca3af !important; }
+  .btn-barra.btn-anadir     { color: #4ade80 !important; }
+  .btn-barra.btn-incidencia { color: #fbbf24 !important; }
+  .btn-barra.btn-ranking    { color: #60a5fa !important; }
+  .mapa-container      { background: #1a1a2e !important; }
+
+  // ── Compartidos ────────────────────────────────────────────
+  .error-mensaje { background: #3b0f0f !important; border-left-color: #f87171 !important; color: #f87171 !important; }
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+.glass {
+  @apply backdrop-blur-xl bg-surface/80;
+}
+
+.architectural-gradient {
+  background: linear-gradient(135deg, #091426 0%, #1e293b 100%);
+}
+
+/* Map & Marker Custom Styles */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 400px;
+  background: #f2f4f6 !important;
+  z-index: 1;
+}
+
+.custom-marker-libre {
+  background: #22c55e !important;
+}
+
+.custom-marker-ocupada {
+  background: #ef4444 !important;
+}
+
+.custom-marker-pin {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.custom-marker-pin::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid white;
+  border-bottom: 2px solid white;
+  background: inherit;
+}
+
+/* Limpia el wrapper por defecto de Leaflet divIcon */
+.custom-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* ── Marcador ubicación usuario (coche) ── */
+@keyframes pulso-usuario {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  70%  { transform: scale(2.4); opacity: 0;   }
+  100% { transform: scale(2.4); opacity: 0;   }
+}
+
+.marcador-usuario-pulso {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marcador-usuario-anillo {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.2);
+  animation: pulso-usuario 2s ease-out infinite;
+}
+
+.marcador-usuario-coche {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: white;
+  border: 2px solid #2563eb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* ── Marcador destino ── */
+@keyframes pulso-destino {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  70%  { transform: scale(2.4); opacity: 0;   }
+  100% { transform: scale(2.4); opacity: 0;   }
+}
+
+.marcador-destino-pulso {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marcador-destino-anillo {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(220, 38, 38, 0.2);
+  animation: pulso-destino 2s ease-out infinite;
+}
+
+.marcador-destino-punto {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: white;
+  border: 2px solid #dc2626;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* Global Force White Text in Inputs */
+input, textarea {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Splash Screen Animations */
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(1.05); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(0.98); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 3s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+/* ── Padding cuando el menú inferior está visible ── */
+.tabs-visible ion-content {
+  --padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+
+/* ── Toolbar incidencias (global para evitar conflictos de scoping) ── */
+app-incidencias ion-header {
+  --background: #091426;
+}
+app-incidencias ion-toolbar {
+  --background: linear-gradient(135deg, #091426 0%, #1e293b 100%);
+  --color: #ffffff;
+  --border-color: transparent;
+  min-height: 64px;
+}
+app-incidencias ion-toolbar ion-title {
+  color: #ffffff;
+}
+app-incidencias ion-toolbar ion-back-button {
+  --color: #ffffff;
+}
+app-incidencias ion-toolbar ion-button {
+  --color: #ffffff;
+}

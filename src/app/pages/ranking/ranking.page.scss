@@ -1,0 +1,293 @@
+.titulo-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ranking-content {
+  --padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+.spinner-centro {
+  display: block;
+  margin: 40px auto;
+}
+
+.error-mensaje {
+  padding: 16px;
+  margin: 12px;
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+  border-radius: 4px;
+  color: #c62828;
+}
+
+// ── PÓDIUM ──────────────────────────────────────────
+.podium-seccion {
+  background: linear-gradient(135deg, #091426 0%, #1e293b 100%);
+  padding: 24px 16px 0;
+}
+
+.podium-titulo {
+  color: #fff;
+  text-align: center;
+  font-size: 22px;               // Más grande
+  font-weight: 700;
+  margin: 0 0 24px;              // Más espaciado
+  letter-spacing: 0.02em;        // Mejor legibilidad
+}
+
+.podium-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+}
+
+.podium-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  max-width: 130px;              // Más ancho
+  padding: 0 8px;                // Espaciado horizontal
+
+  .corona {
+    font-size: 28px;
+    color: #FFD700;
+    margin-bottom: 4px;
+  }
+
+  .avatar {
+    width: 56px;                  // Mayor tamaño
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 22px;              // Icono más grande
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(255,255,255,0.8);  // Borde más visible
+    flex-shrink: 0;
+  }
+
+  .avatar-grande {
+    width: 70px;                  // Ganador más destacado
+    height: 70px;
+    font-size: 28px;
+    border-color: #FFD700;
+    border-width: 3px;
+  }
+
+  .nombre {
+    color: #fff;
+    font-size: 15px;              // Más grande
+    font-weight: 700;
+    margin: 10px 0 4px;           // Más espaciado
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .puntos {
+    color: rgba(255,255,255,0.95);  // Mejor contraste
+    font-size: 14px;              // Más grande
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+
+  .bloque {
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 8px 8px 0 0;
+    padding: 8px 0;
+  }
+
+  .bloque-1 { background: rgba(255,215,0,0.5);  height: 80px; display: flex; align-items: center; justify-content: center; }
+  .bloque-2 { background: rgba(255,255,255,0.2); height: 60px; display: flex; align-items: center; justify-content: center; }
+  .bloque-3 { background: rgba(205,127,50,0.35); height: 45px; display: flex; align-items: center; justify-content: center; }
+}
+
+// ── INFO PUNTOS ─────────────────────────────────────
+.info-puntos {
+  display: flex;
+  flex-direction: column;        // Stack verticalmente en móvil
+  gap: 12px;                     // Espaciado entre elementos
+  background: linear-gradient(135deg, #f0f4ff 0%, #f9f7ff 100%);
+  padding: 20px 16px;            // Más padding
+  border-bottom: 2px solid #d1d5db;  // Borde más visible
+
+  p {
+    font-size: 16px;             // Más grande
+    color: #1f2937;              // Mejor contraste
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;                   // Más espacio icon-text
+    font-weight: 500;
+
+    ion-icon {
+      color: #091426;
+      font-size: 20px;           // Icono más grande
+      flex-shrink: 0;
+    }
+  }
+}
+
+// ── LISTA ──────────────────────────────────────────────────
+.lista-ranking {
+  ion-item-divider {
+    background: linear-gradient(90deg, #f0f4ff 0%, #f9f7ff 100%);
+    --padding-start: 16px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 700;            // Más notorio
+    font-size: 16px;             // Más grande
+    color: #091426;              // Color temático
+  }
+
+  ion-item {
+    --padding-start: 16px;       // Más padding
+    --padding-end: 16px;
+    --inner-padding-start: 0;
+    --inner-padding-end: 0;
+    min-height: 64px;            // Más alto para mejor toque
+
+    h2 {
+      font-weight: 700;
+      color: #1f2937;            // Mejor contraste
+      font-size: 16px;
+    }
+
+    p {
+      font-size: 14px;           // Más grande
+      color: #4b5563;            // Mejor contraste
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+}
+
+.posicion {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #555;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+
+  &.oro   { background: #FFD700; color: #fff; }
+  &.plata { background: #C0C0C0; color: #fff; }
+  &.bronce{ background: #CD7F32; color: #fff; }
+}
+
+.badge-puntos {
+  --background: #091426;
+  --color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+
+// ── FIX BOTONES TOOLBAR (override Ionic shadow DOM) ─────────────────
+ion-header ion-toolbar {
+  --background: linear-gradient(135deg, #091426 0%, #1e293b 100%) !important;
+  --color: #ffffff !important;
+}
+ion-header ion-toolbar ion-button,
+ion-header ion-toolbar ion-back-button {
+  --color: #ffffff !important;
+  color: #ffffff !important;
+}
+ion-header ion-toolbar ion-button ion-icon,
+ion-header ion-toolbar ion-back-button::part(native) {
+  color: #ffffff !important;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  FIX DEFINITIVO: Botón "Aa" visible en toolbar (shadow DOM)
+// ══════════════════════════════════════════════════════════════
+
+ion-header ion-toolbar ion-button::part(native) {
+  color: #ffffff !important;
+  background: transparent !important;
+}
+
+ion-header ion-toolbar ion-button ion-icon {
+  color: #ffffff !important;
+  font-size: 22px !important;
+}
+
+// ── Escalado de fuente ────────────────────────────────────────
+.ranking-content {
+  .podium-titulo { font-size: calc(var(--font-scale, 1) * 22px) !important; }
+  .nombre        { font-size: calc(var(--font-scale, 1) * 15px) !important; }
+  .puntos        { font-size: calc(var(--font-scale, 1) * 14px) !important; }
+  h2             { font-size: calc(var(--font-scale, 1) * 16px) !important; }
+  p, .info-puntos p { font-size: calc(var(--font-scale, 1) * 15px) !important; }
+  .badge-puntos  { font-size: calc(var(--font-scale, 1) * 12px) !important; }
+}
+
+// ── Dark mode ─────────────────────────────────────────────────
+@media (prefers-color-scheme: dark) {
+  .ranking-content {
+    --background: #121212;
+  }
+
+  .error-mensaje {
+    background: #3b0f0f;
+    border-left-color: #f87171;
+    color: #f87171;
+  }
+
+  // Info puntos (gradiente claro)
+  .info-puntos {
+    background: #1e1e1e;
+    border-bottom-color: #333;
+
+    p {
+      color: #e0e0e0;
+
+      ion-icon { color: #60a5fa; }
+      strong   { color: #ffffff; }
+    }
+  }
+
+  // Divisor de lista
+  .lista-ranking {
+    ion-item-divider {
+      background: #1a1a2e;
+      --background: #1a1a2e;
+      color: #60a5fa;
+      --color: #60a5fa;
+    }
+
+    ion-item {
+      --background: #1e1e1e;
+      h2 { color: #f3f4f6 !important; }
+      p  { color: #9ca3af !important; }
+    }
+  }
+
+  // Posición
+  .posicion {
+    background: #374151;
+    color: #e0e0e0;
+  }
+
+  // Badge puntos
+  .badge-puntos {
+    --background: #1e293b;
+    --color: #ffffff;
+  }
+}

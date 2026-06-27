@@ -1,0 +1,156 @@
+<ion-content class="registro-content" [style.--font-scale]="fontScale">
+
+  <div class="registro-wrapper">
+
+    <!-- Botón aumentar letra -->
+    <div class="font-scale-btn-wrapper">
+      <ion-button (click)="aumentarLetra()" aria-label="Aumentar tamaño de letra" title="Aumentar letra" class="font-scale-btn" fill="clear" size="small">
+        <ion-icon slot="icon-only" name="text"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Cabecera -->
+    <div class="registro-header">
+      <div class="logo-circle">
+        <ion-icon name="person-add"></ion-icon>
+      </div>
+      <h1 class="app-name">IESELRINCON</h1>
+      <p class="app-tagline">Crea tu cuenta y empieza a colaborar</p>
+    </div>
+
+    <!-- Card formulario -->
+    <div class="registro-card">
+      <h2 class="form-title">Crear cuenta</h2>
+
+      <form [formGroup]="formulario">
+
+        <!-- Nombre -->
+        <div class="campo">
+          <ion-item lines="none" class="input-item">
+            <ion-icon name="person-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input
+              formControlName="name"
+              type="text"
+              placeholder="Nombre completo"
+              autocomplete="name">
+            </ion-input>
+          </ion-item>
+          @if (name?.touched && name?.hasError('required')) {
+            <p class="campo-error">El nombre es obligatorio</p>
+          }
+          @if (name?.touched && name?.hasError('minlength')) {
+            <p class="campo-error">Mínimo 2 caracteres</p>
+          }
+          @if (erroresValidacion['name']) {
+            @for (e of erroresValidacion['name']; track e) {
+              <p class="campo-error">{{ e }}</p>
+            }
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="campo">
+          <ion-item lines="none" class="input-item">
+            <ion-icon name="mail-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input
+              formControlName="email"
+              type="email"
+              placeholder="Correo electrónico"
+              autocomplete="email">
+            </ion-input>
+          </ion-item>
+          @if (email?.touched && email?.hasError('required')) {
+            <p class="campo-error">El email es obligatorio</p>
+          }
+          @if (email?.touched && email?.hasError('email')) {
+            <p class="campo-error">Introduce un email válido</p>
+          }
+          @if (erroresValidacion['email']) {
+            @for (e of erroresValidacion['email']; track e) {
+              <p class="campo-error">{{ e }}</p>
+            }
+          }
+        </div>
+
+        <!-- Contraseña -->
+        <div class="campo">
+          <ion-item lines="none" class="input-item">
+            <ion-icon name="lock-closed-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input
+              formControlName="password"
+              [type]="mostrarPassword ? 'text' : 'password'"
+              placeholder="Contraseña (mín. 8 caracteres)"
+              autocomplete="new-password">
+            </ion-input>
+            <ion-button slot="end" fill="clear" (click)="mostrarPassword = !mostrarPassword">
+              <ion-icon [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-item>
+          @if (password?.touched && password?.hasError('required')) {
+            <p class="campo-error">La contraseña es obligatoria</p>
+          }
+          @if (password?.touched && password?.hasError('minlength')) {
+            <p class="campo-error">Mínimo 8 caracteres</p>
+          }
+          @if (erroresValidacion['password']) {
+            @for (e of erroresValidacion['password']; track e) {
+              <p class="campo-error">{{ e }}</p>
+            }
+          }
+        </div>
+
+        <!-- Confirmar contraseña -->
+        <div class="campo">
+          <ion-item lines="none" class="input-item">
+            <ion-icon name="shield-checkmark-outline" slot="start" class="input-icon"></ion-icon>
+            <ion-input
+              formControlName="password_confirmation"
+              [type]="mostrarConfirmacion ? 'text' : 'password'"
+              placeholder="Repetir contraseña"
+              autocomplete="new-password">
+            </ion-input>
+            <ion-button slot="end" fill="clear" (click)="mostrarConfirmacion = !mostrarConfirmacion">
+              <ion-icon [name]="mostrarConfirmacion ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-item>
+          @if (noCoinciden) {
+            <p class="campo-error">Las contraseñas no coinciden</p>
+          }
+        </div>
+
+        @if (error) {
+          <div class="error-banner">
+            <ion-icon name="alert-circle"></ion-icon>
+            {{ error }}
+          </div>
+        }
+
+        <ion-button
+          expand="block"
+          class="btn-registro"
+          [disabled]="loading"
+          (click)="registro()">
+          @if (loading) {
+            <ion-spinner name="crescent" slot="start"></ion-spinner>
+            Creando cuenta...
+          } @else {
+            <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+            Crear cuenta
+          }
+        </ion-button>
+
+      </form>
+
+      <div class="separador">
+        <span>¿Ya tienes cuenta?</span>
+      </div>
+
+      <ion-button expand="block" fill="outline" class="btn-login" (click)="irLogin()">
+        <ion-icon slot="start" name="log-in-outline"></ion-icon>
+        Iniciar sesión
+      </ion-button>
+
+    </div>
+  </div>
+
+</ion-content>

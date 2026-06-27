@@ -1,0 +1,248 @@
+<ion-header>
+  <ion-toolbar class="toolbar-incidencia">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="warning" aria-hidden="true"></ion-icon>
+      Reportar problema
+    </ion-title>
+    <ion-buttons slot="end">
+      <app-font-scale-button></app-font-scale-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="incidencia-content" [style.--font-scale]="fontScale">
+
+  <!-- PANTALLA DE ÉXITO -->
+  @if (enviado) {
+    <div class="exito-container">
+      <div class="exito-icono-box">
+        <ion-icon name="checkmark-circle" class="exito-icono"></ion-icon>
+      </div>
+      <h2 class="exito-titulo">¡Problema reportado!</h2>
+      <p class="exito-texto">Gracias por tu colaboración. Nuestro equipo revisará tu reporte en breve.</p>
+
+      <div class="exito-botones">
+        <ion-button expand="block" (click)="nueva()" fill="outline" color="primary" size="large">
+          Reportar otro
+        </ion-button>
+        <ion-button expand="block" (click)="volver()" color="primary" size="large">
+          Volver al mapa
+        </ion-button>
+      </div>
+    </div>
+  }
+
+  <!-- FORMULARIO DE REPORTE -->
+  @if (!enviado) {
+    <div class="formulario-container">
+
+      <!-- SECCIÓN: UBICACIÓN -->
+      <div class="seccion-formulario">
+        <h3 class="seccion-titulo">
+          <ion-icon name="location" aria-hidden="true"></ion-icon>
+          Ubicación
+        </h3>
+
+        <!-- Plaza relacionada -->
+        <div class="campo-grupo">
+          <ion-label class="campo-label">
+            <span class="label-texto">Plaza (opcional)</span>
+            <span class="label-ayuda">Si conoces la plaza exacta</span>
+          </ion-label>
+          <ion-select
+            [(ngModel)]="form.plaza_id"
+            (ionChange)="onPlazaChange()"
+            placeholder="Selecciona una plaza..."
+            interface="action-sheet"
+            class="campo-select">
+            @for (p of plazas; track p.id) {
+              <ion-select-option [value]="p.id">{{ p.direccion }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+
+        <!-- Dirección -->
+        <div class="campo-grupo" [class.campo-error-activo]="enviandoIntento && !form.direccion_plaza.trim()">
+          <ion-label class="campo-label">
+            <span class="label-texto">Dirección de la plaza *</span>
+            <span class="label-ayuda">Ej: Calle Mayor 10, Las Palmas</span>
+          </ion-label>
+          <ion-input
+            [(ngModel)]="form.direccion_plaza"
+            placeholder="Dirección..."
+            class="campo-input"
+            type="text">
+          </ion-input>
+          @if (enviandoIntento && !form.direccion_plaza.trim()) {
+            <div class="campo-error-msg">
+              <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+              <span>Campo requerido</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- SECCIÓN: FECHA Y TIPO -->
+      <div class="seccion-formulario">
+        <h3 class="seccion-titulo">
+          <ion-icon name="calendar" aria-hidden="true"></ion-icon>
+          Cuando y qué
+        </h3>
+
+        <!-- Fecha -->
+        <div class="campo-grupo" [class.campo-error-activo]="enviandoIntento && !form.fecha">
+          <ion-label class="campo-label">
+            <span class="label-texto">Fecha del problema *</span>
+          </ion-label>
+          <ion-input
+            type="date"
+            [(ngModel)]="form.fecha"
+            [max]="fechaHoy"
+            class="campo-input">
+          </ion-input>
+          @if (enviandoIntento && !form.fecha) {
+            <div class="campo-error-msg">
+              <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+              <span>Selecciona una fecha</span>
+            </div>
+          }
+        </div>
+
+        <!-- Tipo de incidencia -->
+        <div class="campo-grupo">
+          <ion-label class="campo-label">
+            <span class="label-texto">Tipo de problema (opcional)</span>
+          </ion-label>
+          @if (tiposIncidencia.length > 0) {
+            <div class="tipo-grid">
+              @for (tipo of tiposIncidencia; track tipo.id) {
+                <button
+                  type="button"
+                  class="tipo-card"
+                  [class.seleccionado]="form.tipo_incidencia_id === tipo.id"
+                  (click)="seleccionarTipo(tipo.id)"
+                  [attr.aria-pressed]="form.tipo_incidencia_id === tipo.id"
+                  [attr.aria-label]="'Tipo: ' + tipo.nombre">
+                  <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+                  <span>{{ tipo.nombre }}</span>
+                </button>
+              }
+            </div>
+          } @else {
+            <div class="tipos-cargando">
+              <ion-spinner name="crescent" class="spinner-sm"></ion-spinner>
+              <p>Cargando tipos...</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- SECCIÓN: DESCRIPCIÓN Y FOTO -->
+      <div class="seccion-formulario">
+        <h3 class="seccion-titulo">
+          <ion-icon name="create" aria-hidden="true"></ion-icon>
+          Detalles
+        </h3>
+
+        <!-- Descripción -->
+        <div class="campo-grupo" [class.campo-error-activo]="enviandoIntento && !form.incidencia.trim()">
+          <ion-label class="campo-label">
+            <span class="label-texto">Descripción del problema *</span>
+            <span class="label-ayuda">Cuéntanos qué pasó</span>
+          </ion-label>
+          <ion-textarea
+            [(ngModel)]="form.incidencia"
+            placeholder="Describe el problema con detalle..."
+            rows="5"
+            class="campo-textarea"
+            auto-grow="true">
+          </ion-textarea>
+          @if (enviandoIntento && !form.incidencia.trim()) {
+            <div class="campo-error-msg">
+              <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+              <span>Describe el problema</span>
+            </div>
+          }
+        </div>
+
+        <!-- Foto -->
+        <div class="campo-grupo">
+          <ion-label class="campo-label">
+            <span class="label-texto">Foto del problema (opcional)</span>
+            <span class="label-ayuda">Nos ayuda a entender mejor la situación</span>
+          </ion-label>
+
+          @if (fotoPreview) {
+            <div class="foto-preview-container">
+              <img [src]="fotoPreview" class="foto-preview" alt="Foto adjunta del problema" />
+              <button type="button" class="foto-eliminar" (click)="eliminarFoto()" aria-label="Eliminar foto">
+                <ion-icon name="close-circle" aria-hidden="true"></ion-icon>
+                Eliminar
+              </button>
+            </div>
+          } @else {
+            <div class="foto-botones">
+              <button type="button" class="foto-btn foto-btn-camara" (click)="tomarFoto()" aria-label="Tomar foto con la cámara">
+                <ion-icon name="camera" aria-hidden="true"></ion-icon>
+                <span>Tomar foto</span>
+              </button>
+              <button type="button" class="foto-btn foto-btn-galeria" (click)="seleccionarDeGaleria()" aria-label="Seleccionar foto de la galería">
+                <ion-icon name="images" aria-hidden="true"></ion-icon>
+                <span>De la galería</span>
+              </button>
+              <input id="foto-input" type="file" accept="image/*" (change)="onFotoChange($event)" hidden />
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- MENSAJES DE ERROR -->
+      @if (error) {
+        <div class="error-banner" role="alert">
+          <ion-icon name="alert-circle" aria-hidden="true"></ion-icon>
+          <div class="error-contenido">
+            <strong>Error al enviar</strong>
+            <p>{{ error }}</p>
+          </div>
+        </div>
+      }
+
+    </div>
+  }
+
+</ion-content>
+
+<ion-footer>
+  @if (!enviado) {
+    <div class="acciones-container">
+      <ion-button
+        expand="block"
+        color="primary"
+        class="btn-enviar-incidencia"
+        [disabled]="enviando"
+        (click)="enviar()"
+        size="large">
+        @if (enviando) {
+          <ion-spinner name="crescent" slot="start" aria-hidden="true"></ion-spinner>
+          <span>Enviando...</span>
+        } @else {
+          <ion-icon name="send" slot="start" aria-hidden="true"></ion-icon>
+          <span>Enviar reporte</span>
+        }
+      </ion-button>
+
+      <ion-button
+        expand="block"
+        fill="outline"
+        color="medium"
+        size="large"
+        (click)="volver()">
+        Cancelar
+      </ion-button>
+    </div>
+  }
+  <div class="safe-area-bottom"></div>
+</ion-footer>

@@ -1,0 +1,7 @@
+{
+  "name": "IESELRINCON",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
